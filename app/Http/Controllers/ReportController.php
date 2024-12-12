@@ -99,48 +99,51 @@ class ReportController extends Controller
         //
     }
 
-    public function vote(Request $request, $id)
+    public function vote($id)
     {
-        // Pastikan pengguna sudah login
+        // Ensure the user is logged in
         if (!Auth::check()) {
             return response()->json(['error' => 'You must be logged in to vote.'], 401);
         }
 
-        // Temukan report berdasarkan ID
+        // Find the report by ID
         $report = Report::findOrFail($id);
 
-        // Ambil daftar ID pengguna yang sudah memberikan vote (voting disimpan dalam JSON)
+        // Decode the voting JSON field into an array
         $votes = json_decode($report->voting, true);
 
-        // Cek apakah pengguna sudah memberi vote
-        $hasVoted = in_array(Auth::id(), $votes);
-
-        // Jika belum memberi vote, tambahkan ID pengguna ke dalam array votes
-        if (!$hasVoted) {
-            $votes[] = Auth::id();
-            $report->voting = json_encode($votes);
-            $report->save();
+        // Check if the user has already voted
+        if (in_array(Auth::id(), $votes)) {
+            return response()->json(['error' => 'You have already voted for this report.'], 400);
         }
 
-        // Kembalikan respons dengan informasi vote yang baru
+        // Add the user's ID to the votes array
+        $votes[] = Auth::id();
+
+        // Update the voting field in the report
+        $report->voting = json_encode($votes);
+        $report->save();
+
+        // Return the new vote count
         return response()->json([
-            'message' => $hasVoted ? 'You have already voted!' : 'Vote successful!',
-            'count' => count($votes),  // Mengembalikan jumlah vote yang baru
-            'hasVoted' => $hasVoted   // Menambahkan flag apakah pengguna sudah memberi vote
+            'message' => 'Vote successful!',
+            'count' => count($votes)  // Return the updated vote count
         ]);
     }
-
+    
     public function searchByProvince(Request $request)
     {
-        $provinceId = $request->input('search');
+        // Get the selected province from the request
+        $province = $request->input('search');
 
-    // Validate if provinceId exists
-        if (!$provinceId) {
+        // Validate if province is provided
+        if (!$province) {
             return response()->json(['error' => 'Provinsi tidak dipilih'], 400);
         }
 
         // Query the reports based on the selected province
-        $reports = Report::where('province_id', $provinceId)->get();  // Assuming 'province_id' exists
+        $reports = Report::where('province', $province)->get();
+
 
         // Return reports if found
         if ($reports->isEmpty()) {

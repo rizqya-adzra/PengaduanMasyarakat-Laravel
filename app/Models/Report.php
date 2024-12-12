@@ -12,9 +12,9 @@ class Report extends Model
         'user_id', 'description', 'type', 'province', 'regency', 'subdistrict', 'village', 'image', 'statement', 'voting'
     ];
 
-    // protected $casts = [
-    //     'voting' => 'array',
-    // ];
+    protected $casts = [
+        'voting' => 'array',
+    ];
 
     public function comment()
     {

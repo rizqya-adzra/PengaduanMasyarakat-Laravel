@@ -41,9 +41,9 @@
                 </div>
                 <!-- Bagian Artikel -->
                 <!-- Daftar laporan berdasarkan provinsi -->
-            <div id="reports-list">
-                <!-- Laporan yang sesuai dengan provinsi akan dimuat di sini -->
-            </div>
+                <div id="reports-list">
+                    <!-- Laporan yang sesuai dengan provinsi akan dimuat di sini -->
+                </div>
             </div>
         </div>
 
@@ -117,24 +117,39 @@
 
                             // Loop melalui laporan yang diterima dari server dan tampilkan
                             response.forEach(function(report) {
+                                // Buat objek tanggal dari created_at
+                                const createdAt = new Date(report.created_at);
+
+                                // Format tanggal dengan toLocaleString
+                                const formattedDate = createdAt.toLocaleString('id-ID', {
+                                    day: '2-digit',
+                                    month: 'long',
+                                    year: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit',
+                                });
                                 $('#reports-list').append(`
                         <div class="mt-5 p-4 shadow-lg" style="border-radius: 25px;">
                             <div class="d-flex align-items-center">
                                 <img src="{{ asset('storage') }}/${report.image}" class="img-fluid rounded shadow-sm"
                                     alt="Gambar Artikel" style="width: 50%; max-width: 200px;">
                                 <div class="ms-4">
-                                    <h4 class="fw-bold"><a class="text-dark" href="/report/${report.id}">
+                                    <h4 class="fw-bold"><a class="text-dark" href="/guest/show/${report.id}">
                                         ${report.description.substring(0, 50)}
                                     </a></h4>
                                     <p class="text-muted" style="font-size: 0.9rem;">
                                         ${report.description.substring(0, 150)}...
                                     </p>
                                     <div>
-                                        <small>${report.created_at}</small>
+                                        <small>${formattedDate}</small>
                                     </div>
                                     <button class="btn voting-btn" data-id="${report.id}" name="voting" id="voting">
-                                        <i class="fa fa-heart" aria-hidden="true" name="image"></i>
-                                        <small class="d-block text-muted">${report.voting.length} votes</small>
+                                        <i class="fa fa-heart" aria-hidden="true"></i>
+                                        <small class="d-block text-muted">${report.voting || 0} votes</small>
+                                    </button>
+                                    <button class="btn" name="viewers" id="viewers">
+                                        <i class="fa fa-eye" aria-hidden="true"></i>
+                                        <small class="d-block text-muted">${report.viewers || 0}  views</small>
                                     </button>
                                 </div>
                             </div>
@@ -190,6 +205,8 @@
                         }
                     });
                 });
+
+
 
 
 

@@ -44,11 +44,16 @@
                                 {{ $reports['type'] }}
                             </button>
                         </div>
-                        <button class="btn" name="voting" id="voting">
+                        <button class="btn voting-btn" data-id="{{ $reports['id'] }}" name="voting" id="voting">
                             <i class="fa fa-heart" aria-hidden="true" name="image"></i>
+                            <small class="d-block text-muted">
+                                {{ count($reports['voting'] ?? []) }} votes
+                            </small>
                         </button>
+                        
                         <button class="btn" name="viewers" id="viewers">
                             <i class="fa fa-eye" aria-hidden="true"></i>
+                            <small class="d-block text-muted">{{ $reports['viewers'] ?? 0 }} views</small>
                         </button>
                     </div>
                 </div>
