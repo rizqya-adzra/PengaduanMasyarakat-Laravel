@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Report;
 use Illuminate\Http\Request;
 use illuminate\Support\Facades\Auth;
@@ -15,6 +16,13 @@ class ReportController extends Controller
     {
         $reports = Report::all();
         return view('guest.index', compact('reports'));
+    }
+
+    public function dashboard()
+    {
+        $reports = Report::all();
+        $comments = Comment::all();
+        return view('guest.dashboard', compact('reports', 'comments'));
     }
 
     /**
@@ -54,8 +62,8 @@ class ReportController extends Controller
             'image' => $filePath,
             'statement' => 1,
         ]);
-        
-        if($process){
+
+        if ($process) {
             return redirect()->route('head_staff.create')->with('success', 'Artikel Berhasil ditambahkan!');
         } else {
             return redirect()->back()->with('failed', 'Artikel gagal ditambahkan! silahkan coba kembali');
@@ -65,11 +73,7 @@ class ReportController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
-    {
-        $reports = Report::find($id);
-        return view('guest.show', compact('reports'));
-    }
+    public function show(string $id) {}
 
     /**
      * Show the form for editing the specified resource.
@@ -93,5 +97,57 @@ class ReportController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function vote(Request $request, $id)
+    {
+        // Pastikan pengguna sudah login
+        if (!Auth::check()) {
+            return response()->json(['error' => 'You must be logged in to vote.'], 401);
+        }
+
+        // Temukan report berdasarkan ID
+        $report = Report::findOrFail($id);
+
+        // Ambil daftar ID pengguna yang sudah memberikan vote (voting disimpan dalam JSON)
+        $votes = json_decode($report->voting, true);
+
+        // Cek apakah pengguna sudah memberi vote
+        $hasVoted = in_array(Auth::id(), $votes);
+
+        // Jika belum memberi vote, tambahkan ID pengguna ke dalam array votes
+        if (!$hasVoted) {
+            $votes[] = Auth::id();
+            $report->voting = json_encode($votes);
+            $report->save();
+        }
+
+        // Kembalikan respons dengan informasi vote yang baru
+        return response()->json([
+            'message' => $hasVoted ? 'You have already voted!' : 'Vote successful!',
+            'count' => count($votes),  // Mengembalikan jumlah vote yang baru
+            'hasVoted' => $hasVoted   // Menambahkan flag apakah pengguna sudah memberi vote
+        ]);
+    }
+
+    public function searchByProvince(Request $request)
+    {
+        $provinceId = $request->input('search');
+
+    // Validate if provinceId exists
+        if (!$provinceId) {
+            return response()->json(['error' => 'Provinsi tidak dipilih'], 400);
+        }
+
+        // Query the reports based on the selected province
+        $reports = Report::where('province_id', $provinceId)->get();  // Assuming 'province_id' exists
+
+        // Return reports if found
+        if ($reports->isEmpty()) {
+            return response()->json(['error' => 'Tidak ada laporan ditemukan untuk provinsi ini'], 404);
+        }
+
+        // Return reports as JSON response
+        return response()->json($reports);
     }
 }

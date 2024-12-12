@@ -37,11 +37,11 @@
                     <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link active" aria-current="page"
+                                <a class="nav-link {{ Route::is('guest.index') ? 'active' : '' }}" aria-current="page"
                                     href="{{ route('guest.index') }}">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="#">Dashboard</a>
+                                <a class="nav-link {{ Route::is('guest.dashboard') ? 'active' : '' }}" href="{{ route('guest.dashboard') }}">Dashboard</a>
                             </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" role="button" href="#"

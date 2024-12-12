@@ -1,6 +1,26 @@
 @extends('templates.app', ['title' => 'Tambah Artikel | Pengaduan Masyarakat'])
 
 @section('dynamic-contents')
+@if (Session::get('failed'))
+<div class="toast align-items-center text-bg-danger border-0 position-fixed bottom-0 end-0 m-3 mb-4 p-2 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true" id="toast">
+    <div class="d-flex">
+      <div class="toast-body">
+        {{Session::get('failed')}}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+@endif
+@if (Session::get('success'))
+<div class="toast align-items-center text-bg-success border-0 position-fixed bottom-0 end-0 m-3 mb-4 p-2 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true" id="toast">
+    <div class="d-flex">
+      <div class="toast-body">
+        {{Session::get('success')}}
+      </div>
+      <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+    </div>
+</div>
+@endif
 <div class="container">
     <h3 class="text-center mt-5">Buat Artikel</h3>
     <form action="{{ route('head_staff.store') }}" method="POST" class="form mt-3 p-4 shadow-lg" style="background-color: #F4F6FF; border-radius: 25px;" enctype="multipart/form-data">
@@ -31,7 +51,7 @@
                     <option value="" selected disabled hidden>Pilih Jenis</option>
                     <option value="KEJAHATAN">Kejahatan</option>
                     <option value="PEMBANGUNAN">Pembangunan</option>
-                    <option value="SOCIAL">Social</option>
+                    <option value="SOSIAL">Sosial</option>
                 </select>
             </div>
             <div class="col-md-6">

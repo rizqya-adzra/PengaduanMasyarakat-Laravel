@@ -20,13 +20,13 @@
               <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
         </div>
-    @endif
+    @endif     
     <div class="container d-flex justify-content-center">
         <div class="col-lg-8 col-md-12 p-5">
             <div class="mt-2 p-4 shadow-lg" style=" border-radius: 25px;">
                 <div class="d-flex align-items-center">
                     <img src="{{ asset('storage/' . $reports['image']) }}" class="img-fluid rounded shadow-sm"
-                        alt="Gambar Artikel" style="width: 50%; max-width: 200px;">
+                    alt="Gambar Artikel" style="width: 50%; max-width: 200px;">
                     <div class="ms-4">
                         <h4 class="fw-bold"><a class="text-dark" href="">{{ $reports['description'] }}
                             </a></h4>
@@ -40,46 +40,24 @@
                         </div>
                         <div class="mt-3 mb-2">
                             <button type="button" class="btn btn-secondary shadow-sm btn-sm" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="Jenis Artikel">
-                                {{ $reports['type'] }}
-                            </button>
-                        </div>
+                            data-bs-placement="top" title="Jenis Artikel">
+                            {{ $reports['type'] }}
+                        </button>
+                    </div>
                         <button class="btn" name="voting" id="voting">
                             <i class="fa fa-heart" aria-hidden="true" name="image"></i>
                         </button>
                         <button class="btn" name="viewers" id="viewers">
                             <i class="fa fa-eye" aria-hidden="true"></i>
                         </button>
+                </div>
+                </div>
+                @foreach ($comments as $comment)
+                    <div class="mt-4">
+                        <p class="btn btn-success">ON PROCESS</p>
+                        <p> {{ $comment['comment'] }} </p>
                     </div>
-                </div>
-
-                <div class="mt-4">
-                    <div>
-                        <p>Komentar</p>
-                        @if($comments->isEmpty())
-                            <p>Belum ada komentar.</p>
-                        @else
-                            <ul>
-                                @foreach ($comments as $comment)
-                                    <li>
-                                        <p>{{ $comment->comment }}</p>
-                                        <p><small>Dibuat pada: {{ $comment->created_at->format('d M Y H:i') }}</small></p>
-                                    </li>
-                                @endforeach
-                            </ul>
-                        @endif
-                    </div>
-                </div>
-                
-
-                <div class="mt-4">
-                    <form action="{{ route('guest.store', $reports['id']) }}" class="form d-flex flex-column" method="POST">
-                        @csrf
-                        <label class="form-label">Tambahkan Komentar:</label>
-                        <textarea class="form-control" name="comment" id="comment" cols="20" rows="5"></textarea>
-                        <button type="submit" class="btn btn-success mt-3">Kirim</button>
-                    </form>
-                </div>
+                @endforeach
             </div>
         </div>
     </div>

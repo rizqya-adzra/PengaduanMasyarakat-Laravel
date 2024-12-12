@@ -79,20 +79,24 @@ class UserController extends Controller
 
     public function loginAuth(Request $request)
     {
-        $request->validate([
-            'name' => 'required',
-            'email' => 'required',
-            'password' => 'required',
-        ],
-    );
+        $request->validate(
+            [
+                'name' => 'required',
+                'email' => 'required',
+                'password' => 'required',
+            ],
+        );
 
-        $proses = $request->only(['name', 'email', 'password']); 
+        $proses = $request->only(['name', 'email', 'password']);
         if (Auth::attempt($proses)) {
             return redirect()->route('guest.index')->with('success', 'Login berhasil');
         } else {
             return redirect()->back()->with('failed', 'Login gagal, silahkan coba lagi');
         }
 
+        if (!Auth::check()) {
+            return response()->json(['success' => false, 'message' => 'Anda harus login untuk memberikan voting.']);
+        }
     }
 
     public function logout()
