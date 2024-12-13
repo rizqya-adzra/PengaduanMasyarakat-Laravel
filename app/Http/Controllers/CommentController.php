@@ -62,7 +62,7 @@ class CommentController extends Controller
 
     public function showDashboard($id)
     {
-        $comment = Comment::find($id);
+        $comment = Comment::find($id);  
 
         if ($comment) {
             $reports = Report::find($comment->report_id);

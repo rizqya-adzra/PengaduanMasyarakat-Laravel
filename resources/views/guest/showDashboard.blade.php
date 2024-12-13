@@ -54,7 +54,6 @@
                 </div>
                 @foreach ($comments as $comment)
                     <div class="mt-4">
-                        <p class="btn btn-success">ON PROCESS</p>
                         <p> {{ $comment['comment'] }} </p>
                     </div>
                 @endforeach

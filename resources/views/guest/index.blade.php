@@ -50,6 +50,8 @@
         <div class="position-fixed top-50 end-0 p-5 d-flex flex-column" style="transform: translateY(-50%);">
             <button class="btn btn-lg mb-3 shadow-sm" style="background-color: #FBD46D" data-bs-toggle="modal"
                 data-bs-target="#exampleModal"><i class="fa fa-info" aria-hidden="true"></i></button>
+            <a class="btn btn-lg mb-3" href="{{ route('guest.create') }}" style="background-color: #FBD46D"><i
+                    class="fa fa-pencil" aria-hidden="true"></i></a>
         </div>
 
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -93,7 +95,8 @@
                     dataType: "json",
                     success: function(response) {
                         response.forEach(function(province) {
-                            $('#search').append('<option value="' + province.id + '">' + province
+                            $('#search').append('<option value="' + province.id + '" data-name="' +
+                                province.name + '">' + province
                                 .name + '</option>');
                         });
                     },
@@ -117,6 +120,10 @@
 
                             // Loop melalui laporan yang diterima dari server dan tampilkan
                             response.forEach(function(report) {
+                                const provinceName = JSON.parse(report.province || '{}').name || 'Tidak diketahui';
+                                const regencyName = JSON.parse(report.regency || '{}').name || 'Tidak diketahui';
+                                const subdistrictName = JSON.parse(report.subdistrict || '{}').name || 'Tidak diketahui';
+                                const villageName = JSON.parse(report.village || '{}').name || 'Tidak diketahui'
                                 // Buat objek tanggal dari created_at
                                 const createdAt = new Date(report.created_at);
 
@@ -135,18 +142,27 @@
                                     alt="Gambar Artikel" style="width: 50%; max-width: 200px;">
                                 <div class="ms-4">
                                     <h4 class="fw-bold"><a class="text-dark" href="/guest/show/${report.id}">
-                                        ${report.description.substring(0, 50)}
+                                        ${report.description.substring(0, 40)}...
                                     </a></h4>
                                     <p class="text-muted" style="font-size: 0.9rem;">
                                         ${report.description.substring(0, 150)}...
                                     </p>
-                                    <div>
-                                        <small>${formattedDate}</small>
+                                    <small class="mb-3">${formattedDate}</small>
+                                    <div class="d-flex gap-1">
+                                        <small>${provinceName}</small>
+                                        <small>${regencyName}</small>
+                                        <small>${subdistrictName}</small>
+                                        <small>${villageName}</small>
                                     </div>
-                                    <button class="btn voting-btn" data-id="${report.id}" name="voting" id="voting">
-                                        <i class="fa fa-heart" aria-hidden="true"></i>
-                                        <small class="d-block text-muted">${report.voting || 0} votes</small>
-                                    </button>
+                                    <div class="mt-3 mb-2">
+                                        <small class="btn btn-primary btn-sm"> ${report.type} </small>
+                                    </div>
+                                    <button class="btn voting-btn" 
+                                    data-id="${report.id}" 
+                                    data-voted="${report.voting ? 'true' : 'false'}">
+                                    <i class="fa fa-heart ${report.voting ? 'text-danger' : ''}" aria-hidden="true"></i>
+                                    <small id="vote-count" class="d-block text-muted">${(report.voting).length || 0} votes</small>
+                                </button>
                                     <button class="btn" name="viewers" id="viewers">
                                         <i class="fa fa-eye" aria-hidden="true"></i>
                                         <small class="d-block text-muted">${report.viewers || 0}  views</small>
@@ -163,53 +179,37 @@
                     });
                 });
 
-                $('.voting-btn').each(function() {
-                    // Periksa apakah pengguna sudah memberi vote saat halaman dimuat
-                    var report_id = $(this).data('id');
-                    var hasVoted = $(this).data('voted'); // Menyimpan status apakah pengguna sudah vote
-
-                    // Jika pengguna sudah memberi vote, tambahkan kelas 'text-danger'
-                    if (hasVoted) {
-                        $(this).find('i').addClass('text-danger');
-                    }
-                });
-
                 $('.voting-btn').on('click', function() {
-                    var report_id = $(this).data('id');
+                    var reportId = $(this).data('id');
+                    var voted = $(this).data('voted');
+
+                    if (voted) {
+                        alert('Anda sudah menambahkan vote.');
+                        return;
+                    }
 
                     $.ajax({
-                        url: "{{ route('guest.vote', ':id') }}".replace(':id',
-                            report_id), // Ganti placeholder dengan ID
+                        url: "{{ route('guest.vote', ':id') }}".replace(':id', reportId),
                         type: 'POST',
                         data: {
                             _token: '{{ csrf_token() }}',
                         },
                         success: function(response) {
                             if (response.message) {
-                                // Jika vote berhasil, beri tanda pada tombol dengan menambahkan kelas 'text-danger'
-                                $('.voting-btn[data-id="' + report_id + '"] i').addClass(
+                                $('.voting-btn[data-id="' + reportId + '"] i').addClass(
                                     'text-danger');
-
-                                // Update jumlah vote di UI
-                                $('.voting-btn[data-id="' + report_id + '"] .text-muted').text(
+                                $('.voting-btn[data-id="' + reportId + '"] .text-muted').text(
                                     response.count + ' votes');
-
-                                // Set status bahwa pengguna sudah memberi vote
-                                $('.voting-btn[data-id="' + report_id + '"]').data('voted', true);
+                                $('.voting-btn[data-id="' + reportId + '"]').data('voted', true);
                             } else {
                                 alert(response.error);
                             }
                         },
                         error: function(error) {
-                            alert('An error occurred while voting.');
+                            alert('Ada kesalahan, coba lagi nanti.');
                         }
                     });
                 });
-
-
-
-
-
             });
         </script>
     @endpush

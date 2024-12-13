@@ -30,7 +30,7 @@ class ReportController extends Controller
      */
     public function create()
     {
-        return view('head_staff.create');
+        return view('guest.create');
     }
 
     /**
@@ -64,16 +64,36 @@ class ReportController extends Controller
         ]);
 
         if ($process) {
-            return redirect()->route('head_staff.create')->with('success', 'Artikel Berhasil ditambahkan!');
+            return redirect()->route('guest.create')->with('success', 'Pengaduan Berhasil ditambahkan!');
         } else {
-            return redirect()->back()->with('failed', 'Artikel gagal ditambahkan! silahkan coba kembali');
+            return redirect()->back()->with('failed', 'Pengaduan gagal ditambahkan! silahkan coba kembali');
         }
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id) {}
+    public function show($id)
+{
+    // Cari report berdasarkan ID
+    $report = Report::find($id);
+
+    if ($report) {
+        // Ambil komentar-komentar yang terkait dengan report_id yang sama dengan ID report
+        $comments = Comment::where('report_id', $report->id)->get();
+
+        // Ambil laporan berdasarkan ID (hanya laporan dengan ID tersebut)
+        $reports = Report::where('id', $report->id)->get();
+    } else {
+        $reports = [];
+        $comments = [];
+    }
+
+    // Kirim data ke view
+    return view('guest.show', compact('reports', 'comments'));
+}
+
+
 
     /**
      * Show the form for editing the specified resource.
@@ -96,61 +116,63 @@ class ReportController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $proses = Report::where('id', $id)->delete();
+
+        if ($proses) {
+            return redirect()->back()->with('success', 'Data Berhasil Dihapus!');
+        } else {
+            return redirect()->back()->with('failed', 'Data Gagal Dihapus!'); 
+        }
     }
 
-    public function vote($id)
+    public function vote($id, Request $request)
     {
-        // Ensure the user is logged in
-        if (!Auth::check()) {
-            return response()->json(['error' => 'You must be logged in to vote.'], 401);
-        }
-
-        // Find the report by ID
+        $userId = auth()->id(); // Ambil ID pengguna yang login
+        
         $report = Report::findOrFail($id);
 
-        // Decode the voting JSON field into an array
-        $votes = json_decode($report->voting, true);
-
-        // Check if the user has already voted
-        if (in_array(Auth::id(), $votes)) {
-            return response()->json(['error' => 'You have already voted for this report.'], 400);
+        // Cek apakah pengguna sudah memberikan suara
+        if (in_array($userId, $report->voting)) {
+            return response()->json(['error' => 'You have already voted for this report.'], 403);
         }
 
-        // Add the user's ID to the votes array
-        $votes[] = Auth::id();
+        // Tambahkan ID pengguna ke array voting
+        $report->voting = array_merge($report->voting, [$userId]);
 
-        // Update the voting field in the report
-        $report->voting = json_encode($votes);
+        // Update jumlah voting (jika diperlukan)
+        $voteCount = count($report->voting);
+
         $report->save();
 
-        // Return the new vote count
         return response()->json([
-            'message' => 'Vote successful!',
-            'count' => count($votes)  // Return the updated vote count
+            'message' => 'Vote submitted successfully!',
+            'count' => $voteCount,
         ]);
     }
+
     
+
     public function searchByProvince(Request $request)
     {
-        // Get the selected province from the request
-        $province = $request->input('search');
-
-        // Validate if province is provided
-        if (!$province) {
+        // Get the selected province ID from the request
+        $provinceId = $request->input('search'); // Assuming 'search' is the field for the province ID
+    
+        // Validate if province ID is provided
+        if (!$provinceId) {
             return response()->json(['error' => 'Provinsi tidak dipilih'], 400);
         }
-
-        // Query the reports based on the selected province
-        $reports = Report::where('province', $province)->get();
-
-
+    
+        // Query the reports based on the selected province ID, checking the 'id' field within the JSON object
+        $reports = Report::whereRaw('JSON_UNQUOTE(JSON_EXTRACT(province, "$.id")) = ?', [$provinceId])->get();
+    
         // Return reports if found
         if ($reports->isEmpty()) {
             return response()->json(['error' => 'Tidak ada laporan ditemukan untuk provinsi ini'], 404);
         }
-
+    
         // Return reports as JSON response
         return response()->json($reports);
     }
+    
+
 }

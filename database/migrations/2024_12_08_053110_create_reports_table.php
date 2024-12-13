@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('regency');
             $table->string('subdistrict');
             $table->string('village');
-            $table->json('voting')->default(json_encode([]));
+            $table->json('voting')->default('[]'); 
             $table->integer('viewers')->default(0);
             $table->string('image');
             $table->boolean('statement');

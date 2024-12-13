@@ -25,8 +25,8 @@
 
 <body style="background-color: #F4F6FF;">
     @if (Auth::check())
-            <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary shadow-sm">
-                <div class="container-fluid d-flex justify-content-between align-items-center">
+    <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary shadow-sm">
+        <div class="container-fluid d-flex justify-content-between align-items-center">
                     <a class="navbar-brand" href="#">
                         <h4>Pengaduan Masyarakat</h4>
                     </a>

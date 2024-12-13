@@ -23,31 +23,40 @@
     @endif
     <div class="container">
         <div class="d-flex justify-content-center">
-            <!-- Bagian Pencarian -->
-            <div class="col-lg-8 col-md-12 p-5">
+            <div class="col-lg-6 p-5">
                 <div class="text-center mb-5">
-                    <h2 class="mb-4" style="color: #495E57; font-weight: bold;">Pengaduan Anda</h2>
-                    @foreach ($comments as $comment)
-                        <div class="mt-5 p-4 shadow-lg " style=" border-radius: 25px;">
+                    <h2 class="mb-3" style="color: #495E57; font-weight: bold;">Pengaduan Anda</h2>
+                    @foreach ($reports as $report)
+                        <div class="mt-3 p-4 shadow-lg " style=" border-radius: 25px;">
                             <div class="rounded" style="background-color: #495E57; color: white">
                                 <p>ON PROCESS</p>
                             </div>
-                            <p>dikirim pada <b>{{ $comment['created_at'] }}</b></p>
+                            <p>dikirim pada <b>{{ $report['created_at'] }}</b></p>
                             <div class="card">
-                                <p>{{ $comment['comment'] }}</p>
+                                <img src="{{ asset('storage/' . $report['image']) }}" class=" d-flex align-content-center rounded shadow-sm"
+                        alt="Gambar Artikel" style="width: 50%; max-width: 200px;">
+                                <p>{{ \Illuminate\Support\Str::words($report['description'], 8) }}</p>
+                                <p>{{ $report['type'] }}</p>
+                                <div class="d-flex justify-content-center gap-10">
+                                    <p>{{ $report['province'] }}</p>
+                                    <p>{{ $report['regency'] }}</p>
+                                    <p>{{ $report['subdistrict'] }}</p>
+                                    <p>{{ $report['village'] }}</p>
+                                </div>
                             </div>
-                            <b><a href="{{ route('guest.showDashboard', $comment['id']) }}">Selengkapnya...</a></b>
+                            <b><a href="{{ route('guest.show', $report['id']) }}">Selengkapnya...</a></b>
                         </div>
                         <div class="mt-3">
-                            <button class="btn btn-danger" onclick="showModal( '{{ $comment->id }}', '{{ $comment->comment }}')">Hapus</button>
+                            <button class="btn btn-danger" onclick="deleteReport( '{{ $report->id }}', '{{ $report->description }}')">Hapus</button>
                         </div>
                     @endforeach
                 </div>
             </div>
-        </div>
 
     <div class="position-fixed top-50 end-0 p-5 d-flex flex-column" style="transform: translateY(-50%);">
         <button class="btn btn-lg mb-3 shadow-sm" style="background-color: #FBD46D" data-bs-toggle="modal" data-bs-target="#deleteModal"><i class="fa fa-info" aria-hidden="true"></i></button>
+        <a class="btn btn-lg mb-3" href="{{ route('guest.create') }}" style="background-color: #FBD46D"><i
+            class="fa fa-pencil" aria-hidden="true"></i></a>
     </div>  
 
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
@@ -76,19 +85,42 @@
         </div>
     </div>
 
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
         <div class="modal-dialog">
             <form action="" id="form-delete-comment" method="POST">
                 @csrf
                 @method('DELETE')
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="deleteModalLabel">Hapus data Buku</h1>
+                        <h1 class="modal-title fs-5" id="modalDeleteLabel">Hapus Komentar</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal"
                             aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        apakah anda yakin akan menghapus data Buku <span id="nama-buku"
+                        apakah anda yakin akan menghapus Komentar <span id="comment"
+                            style="font-weight: bolder"></span> ?
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
+                        <button type="submit" class="btn btn-danger">Tetap Hapus</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="modal fade" id="modalDeleteReport" tabindex="-1" aria-labelledby="modalDeleteReportLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <form action="" id="form-delete-report" method="POST">
+                @csrf
+                @method('DELETE')
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="modalDeleteReportLabel">Hapus Pengaduan</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        apakah anda yakin akan menghapus Pengaduan <span id="report"
                             style="font-weight: bolder"></span> ?
                     </div>
                     <div class="modal-footer">
@@ -111,12 +143,21 @@
         });
         
         function showModal(id, comment) {
-            let action = '{{ route('guest.delete', ':id') }}';
+            let action = '{{ route('guest.comments.delete', ':id') }}';
             action = action.replace(':id', id);
             $('#form-delete-comment').attr('action', action);
-            $('#deleteModal').modal('show');
+            $('#modalDelete').modal('show');
             console.log(comment);
-            $('#nama-buku').text(comment);
+            $('#comment').text(comment);
+        }
+
+        function deleteReport(id, description) {
+            let action = '{{ route('guest.delete', ':id') }}';
+            action = action.replace(':id', id);
+            $('#form-delete-report').attr('action', action);
+            $('#modalDeleteReport').modal('show');
+            console.log(description);
+            $('#report').text(description);
         }
 </script>
 @endpush

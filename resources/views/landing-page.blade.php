@@ -52,7 +52,7 @@
     <div class="position-fixed top-50 end-0 p-5 d-flex flex-column" style="transform: translateY(-50%);">
         <a class="btn btn-lg mb-3" style="background-color: #FBD46D" href="{{ route('login') }}"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
         <button class="btn btn-lg mb-3" style="background-color: #FBD46D" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-info" aria-hidden="true"></i></button>
-        <button class="btn btn-lg mb-3" style="background-color: #FBD46D"><i class="fa fa-pencil" aria-hidden="true"></i></button>
+        <a class="btn btn-lg mb-3" style="background-color: #FBD46D" href="{{ route('guest.create') }}"><i class="fa fa-pencil" aria-hidden="true" ></i></a>
     </div>    
 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

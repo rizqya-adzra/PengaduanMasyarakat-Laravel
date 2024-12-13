@@ -22,7 +22,7 @@ class IsGuest
     public function handle(Request $request, Closure $next)
     {
         if (Auth::check()) {
-            return redirect()->back()->with('error', 'Anda sudah Login!');
+            return redirect()->route('guest.index')->with('error', 'Anda sudah Login!');
         }
         return $next($request);
     }
