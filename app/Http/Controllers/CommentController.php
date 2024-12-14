@@ -43,9 +43,9 @@ class CommentController extends Controller
         ]);
 
         if($proses) {
-            return redirect()->back()->with('success', 'Pengaduan Anda Terkirim, dan Akan Ditindaklanjuti!');
+            return redirect()->back()->with('success', 'Komentar anda terkirim!');
         } else {
-            return redirect()->back()->with('failed', 'Pengaduan Gagal Terkirim, Silahkan Coba Lagi');
+            return redirect()->back()->with('failed', 'Komentar gagal terkirim, Silahkan Coba Lagi');
         }
     }
 
@@ -58,25 +58,6 @@ class CommentController extends Controller
         $comments = Comment::where('report_id', $id)->get();
         return view('guest.show', compact('reports', 'comments'));
     }
-
-
-    public function showDashboard($id)
-    {
-        $comment = Comment::find($id);  
-
-        if ($comment) {
-            $reports = Report::find($comment->report_id);
-
-            $comments = Comment::where('report_id', $comment->report_id)->get();
-        } else {
-            $reports = null;
-            $comments = [];
-        }
-
-        return view('guest.showDashboard', compact('comments', 'reports'));
-    }
-
-
     /**
      * Show the form for editing the specified resource.
      */

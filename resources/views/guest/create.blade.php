@@ -190,10 +190,10 @@
     // });
 
     $(document).ready(function() {
-    if ($("#toast").length) {
-        var toast = new bootstrap.Toast(document.getElementById('toast'));
-        toast.show();
-    }
+    // if ($("#toast").length) {
+    //     var toast = new bootstrap.Toast(document.getElementById('toast'));
+    //     toast.show();
+    // }
 
     $.ajax({
         method: "GET",

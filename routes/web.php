@@ -43,9 +43,9 @@ Route::middleware(['isLogin'])->group(function () {
         Route::post('/vote/{id}', [ReportController::class, 'vote'])->name('vote');
         Route::get('/dashboard', [ReportController::class, 'dashboard'])->name('dashboard');
         Route::delete('/delete/{id}', [ReportController::class, 'destroy'])->name('delete');
+        Route::get('/showDashboard/{id}', [ReportController::class, 'showDashboard'])->name('showDashboard');
 
         Route::prefix('/comments')->name('comments.')->group(function () {
-            Route::get('/show/{id}', [CommentController::class, 'show'])->name('show');
             Route::post('/store/{id}', [CommentController::class, 'store'])->name('store');
             Route::delete('/delete/{id}', [CommentController::class, 'destroy'])->name('delete');
         });

@@ -106,19 +106,17 @@
                 });
 
                 $('#search').on('change', function() {
-                    var provinceId = $(this).val(); // Ambil ID provinsi yang dipilih
+                    var provinceId = $(this).val(); 
 
                     $.ajax({
-                        url: "{{ route('guest.search') }}", // Panggil route untuk pencarian berdasarkan provinsi
+                        url: "{{ route('guest.search') }}", 
                         type: "GET",
                         data: {
-                            search: provinceId // Kirim ID provinsi ke server
+                            search: provinceId
                         },
                         success: function(response) {
-                            // Clear hasil sebelumnya
                             $('#reports-list').empty();
 
-                            // Loop melalui laporan yang diterima dari server dan tampilkan
                             response.forEach(function(report) {
                                 const provinceName = JSON.parse(report.province || '{}').name || 'Tidak diketahui';
                                 const regencyName = JSON.parse(report.regency || '{}').name || 'Tidak diketahui';
