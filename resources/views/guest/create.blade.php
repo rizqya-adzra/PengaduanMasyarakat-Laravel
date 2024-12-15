@@ -100,100 +100,11 @@
 
 @push('script')
 <script>
-    // $(document).ready(function() {
-    //     if ($("#toast").length) {
-    //         var toast = new bootstrap.Toast(document.getElementById('toast'));
-    //         toast.show();
-    //     }
-
-    //     $.ajax({
-    //         method: "GET",
-    //         url: "https://www.emsifa.com/api-wilayah-indonesia/api/provinces.json",
-    //         dataType: "json",
-    //         success: function(response) {
-    //             response.forEach(function(province) {
-    //                 $('#province').append('<option value="' + province.id + '">' + province.name + '</option>');
-    //             });
-    //         },
-    //         error: function() {
-    //             alert("Gagal memuat data provinsi!");
-    //         }
-    //     });
-
-    //     // Enable regency when province is selected
-    //     $('#province').on('change', function() {
-    //         let provinceId = $(this).val();
-    //         if (provinceId) {
-    //             $('#regency').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
-    //             $('#subdistrict, #village').prop('disabled', true).html('<option value="" disabled selected hidden>Pilih Kecamatan/Desa</option>');
-    //             $.ajax({
-    //                 method: "GET",
-    //                 url: `https://www.emsifa.com/api-wilayah-indonesia/api/regencies/${provinceId}.json`,
-    //                 dataType: "json",
-    //                 success: function(response) {
-    //                     $('#regency').html('<option value="" disabled selected hidden>Pilih Kabupaten</option>');
-    //                     response.forEach(function(regency) {
-    //                         $('#regency').append('<option value="' + regency.id + '">' + regency.name + '</option>');
-    //                     });
-    //                 },
-    //                 error: function() {
-    //                     alert("Gagal memuat data kabupaten!");
-    //                 }
-    //             });
-    //         }
-    //     });
-
-    //     // Enable subdistrict when regency is selected
-    //     $('#regency').on('change', function() {
-    //         let regencyId = $(this).val();
-    //         if (regencyId) {
-    //             $('#subdistrict').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
-    //             $('#village').prop('disabled', true).html('<option value="" disabled selected hidden>Pilih Desa</option>');
-    //             $.ajax({
-    //                 method: "GET",
-    //                 url: `https://www.emsifa.com/api-wilayah-indonesia/api/districts/${regencyId}.json`,
-    //                 dataType: "json",
-    //                 success: function(response) {
-    //                     $('#subdistrict').html('<option value="" disabled selected hidden>Pilih Kecamatan</option>');
-    //                     response.forEach(function(subdistrict) {
-    //                         $('#subdistrict').append('<option value="' + subdistrict.id + '">' + subdistrict.name + '</option>');
-    //                     });
-    //                 },
-    //                 error: function() {
-    //                     alert("Gagal memuat data kecamatan!");
-    //                 }
-    //             });
-    //         }
-    //     });
-
-    //     // Enable village when subdistrict is selected
-    //     $('#subdistrict').on('change', function() {
-    //         let subdistrictId = $(this).val();
-    //         if (subdistrictId) {
-    //             $('#village').prop('disabled', false).html('<option value="" disabled selected hidden>Loading...</option>');
-    //             $.ajax({
-    //                 method: "GET",
-    //                 url: `https://www.emsifa.com/api-wilayah-indonesia/api/villages/${subdistrictId}.json`,
-    //                 dataType: "json",
-    //                 success: function(response) {
-    //                     $('#village').html('<option value="" disabled selected hidden>Pilih Desa</option>');
-    //                     response.forEach(function(village) {
-    //                         $('#village').append('<option value="' + village.id + '">' + village.name + '</option>');
-    //                     });
-    //                 },
-    //                 error: function() {
-    //                     alert("Gagal memuat data desa!");
-    //                 }
-    //             });
-    //         }
-    //     });
-    // });
-
     $(document).ready(function() {
-    // if ($("#toast").length) {
-    //     var toast = new bootstrap.Toast(document.getElementById('toast'));
-    //     toast.show();
-    // }
+    if ($("#toast").length) {
+        var toast = new bootstrap.Toast(document.getElementById('toast'));
+        toast.show();
+    }
 
     $.ajax({
         method: "GET",

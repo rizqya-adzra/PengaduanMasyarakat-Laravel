@@ -25,56 +25,129 @@
             </div>
         </div>
     @endif
-    <div class="container">
-        <div class="d-flex justify-content-center">
-            <div class="col-lg-6 p-5">
-                <div class="text-center mb-5">
-                    <h2 class="mb-3" style="color: #495E57; font-weight: bold;">Pengaduan Anda</h2>
-                    @foreach ($reports as $report)
-                        <div class="mt-3 p-4 shadow-lg" style="border-radius: 15px;">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                                <!-- Status dan Tombol Hapus -->
-                                <div class="badge"
-                                    style="background-color: #495E57; color: white; padding: 10px; border-radius: 5px;">
-                                    ON PROCESS
+    <div class="container mt-5">
+    <h3 class="text-center">Monitor Pengaduan</h3>
+    <div class="accordion" id="reportAccordion">
+        @foreach ($reports as $report)
+            <div class="accordion-item" style="background-color: {{ $loop->odd ? '#495E57' : '#fff' }}; color: {{ $loop->odd ? '#fff' : '#000' }}">
+                <h2 class="accordion-header" id="heading-{{ $report->id }}">
+                    <button 
+                        class="accordion-button collapsed" 
+                        type="button" 
+                        data-bs-toggle="collapse" 
+                        data-bs-target="#collapse-{{ $report->id }}" 
+                        aria-expanded="false" 
+                        aria-controls="collapse-{{ $report->id }}"
+                        style="background-color: {{ $loop->odd ? '#495E57' : '#fff' }}; color: {{ $loop->odd ? '#fff' : '#00' }}">
+                        Pengaduan pada {{ $report->created_at->format('d M Y H:i') }}
+                    </button>
+                </h2>
+                <div 
+                    id="collapse-{{ $report->id }}" 
+                    class="accordion-collapse collapse" 
+                    aria-labelledby="heading-{{ $report->id }}" 
+                    data-bs-parent="#reportAccordion">
+                    <div class="accordion-body">
+                        <ul class="nav nav-tabs justify-content-around" id="myTab-{{ $report->id }}" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link active fw-bold text-uppercase border-0 bg-transparent" 
+                                   id="data-tab-{{ $report->id }}" 
+                                   data-bs-toggle="tab" 
+                                   href="#data-{{ $report->id }}" 
+                                   role="tab" 
+                                   aria-controls="data-{{ $report->id }}" 
+                                   aria-selected="true"
+                                   style="color: {{ $loop->odd ? '#fff' : '#000' }}">
+                                   Data
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link fw-bold text-uppercase border-0 bg-transparent" 
+                                   id="image-tab-{{ $report->id }}" 
+                                   data-bs-toggle="tab" 
+                                   href="#image-{{ $report->id }}" 
+                                   role="tab" 
+                                   aria-controls="image-{{ $report->id }}" 
+                                   aria-selected="false"
+                                   style="color: {{ $loop->odd ? '#fff' : '#000' }}">
+                                   Gambar
+                                </a>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <a class="nav-link fw-bold text-uppercase border-0 bg-transparent" 
+                                   id="status-tab-{{ $report->id }}" 
+                                   data-bs-toggle="tab" 
+                                   href="#status-{{ $report->id }}" 
+                                   role="tab" 
+                                   aria-controls="status-{{ $report->id }}" 
+                                   aria-selected="false"
+                                   style="color: {{ $loop->odd ? '#fff' : '#000' }}">
+                                   Status
+                                </a>
+                            </li>
+                        </ul>
+                           
+                        <div class="tab-content p-3 rounded-bottom" id="myTabContent-{{ $report->id }}">
+                            <!-- Tab Data -->
+                            <div 
+                                class="tab-pane fade show active" 
+                                id="data-{{ $report->id }}" 
+                                role="tabpanel" 
+                                aria-labelledby="data-tab-{{ $report->id }}">
+                                <ul class="list-unstyled">
+                                    <li><strong>Lokasi:</strong> {{ json_decode($report->province)->name }}, 
+                                        {{ json_decode($report->regency)->name }}, 
+                                        {{ json_decode($report->subdistrict)->name }}, 
+                                        {{ json_decode($report->village)->name }}</li>
+                                    <li><strong>Tipe:</strong> {{ $report['type'] }}</li>
+                                    <li><strong>Deskripsi:</strong> {{ $report->description }}</li>
+                                </ul>
+                            </div>
+    
+                            <!-- Tab Gambar -->
+                            <div 
+                                class="tab-pane fade" 
+                                id="image-{{ $report->id }}" 
+                                role="tabpanel" 
+                                aria-labelledby="image-tab-{{ $report->id }}">
+                                <div class="text-center">
+                                    <img 
+                                        src="{{ asset('storage/' . $report['image']) }}" 
+                                        alt="Gambar Artikel" 
+                                        class="rounded shadow-sm img-fluid mt-3"
+                                        style="max-width: 300px; object-fit: contain;">
                                 </div>
-                                <button class="btn btn-danger btn-sm"
-                                    onclick="deleteReport('{{ $report->id }}', '{{ $report->description }}')">
-                                    Hapus
-                                </button>
                             </div>
-
-                            <!-- Detail Pengaduan -->
-                            <p class="text-muted mb-2">Dikirim pada <b>{{ $report['created_at'] }}</b></p>
-                            <div class="text-center mb-3">
-                                <img src="{{ asset('storage/' . $report['image']) }}" alt="Gambar Artikel"
-                                    class="rounded shadow-sm"
-                                    style="width: 100%; max-width: 200px; height: auto; object-fit: contain;">
-                            </div>
-                            <p class="text-center mb-1">{{ \Illuminate\Support\Str::words($report['description'], 8) }}</p>
-                            <p class="text-center text-warning mb-3">{{ $report['type'] }}</p>
-
-                            <!-- Lokasi Pengaduan -->
-                            <div class="d-flex justify-content-center gap-2">
-                                <span>{{ json_decode($report->province)->name }}</span>
-                                <span>-</span>
-                                <span>{{ json_decode($report->regency)->name }}</span>
-                                <span>-</span>
-                                <span>{{ json_decode($report->subdistrict)->name }}</span>
-                            </div>
-
-                            <!-- Link Selengkapnya -->
-                            <div class="text-center mt-3">
-                                <a href="{{ route('guest.showDashboard', $report['id']) }}"
-                                    class="btn btn-outline-primary btn-sm">Selengkapnya...</a>
+    
+                            <!-- Tab Status -->
+                            <div 
+                                class="tab-pane fade" 
+                                id="status-{{ $report->id }}" 
+                                role="tabpanel" 
+                                aria-labelledby="status-tab-{{ $report->id }}">
+                                <ul class="list-unstyled">
+                                    <li class="text-danger fw-bold">
+                                        Pengaduan belum di respon petugas, ingin menghapus pengaduan?
+                                    </li>
+                                    <li class="mt-2">
+                                        <button 
+                                            class="btn btn-danger btn-sm fw-semibold"
+                                            onclick="deleteReport('{{ $report->id }}', '{{ $report->description }}')">
+                                            <i class="bi bi-trash me-1"></i>Hapus
+                                        </button>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
-                    @endforeach
+                    </div>
                 </div>
             </div>
-        </div>
+        @endforeach
     </div>
+</div>
 
+
+    
 
     <div class="position-fixed top-50 end-0 p-5 d-flex flex-column" style="transform: translateY(-50%);">
         <button class="btn btn-lg mb-3 shadow-sm" style="background-color: #FBD46D" data-bs-toggle="modal"
@@ -109,28 +182,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="modalDeleteLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form action="" id="form-delete-comment" method="POST">
-                @csrf
-                @method('DELETE')
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="modalDeleteLabel">Hapus Komentar</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        apakah anda yakin akan menghapus Komentar <span id="comment" style="font-weight: bolder"></span>
-                        ?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Tutup</button>
-                        <button type="submit" class="btn btn-danger">Tetap Hapus</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
     <div class="modal fade" id="modalDeleteReport" tabindex="-1" aria-labelledby="modalDeleteReportLabel"
         aria-hidden="true">
         <div class="modal-dialog">
@@ -164,15 +215,6 @@
                 toast.show();
             }
         });
-
-        function showModal(id, comment) {
-            let action = '{{ route('guest.comments.delete', ':id') }}';
-            action = action.replace(':id', id);
-            $('#form-delete-comment').attr('action', action);
-            $('#modalDelete').modal('show');
-            console.log(comment);
-            $('#comment').text(comment);
-        }
 
         function deleteReport(id, description) {
             let action = '{{ route('guest.delete', ':id') }}';

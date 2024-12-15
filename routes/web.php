@@ -3,6 +3,7 @@
 use App\Http\Controllers\CommentController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportController;
+use App\Http\Controllers\ResponseController;
 use App\Http\Controllers\UserController;
 
 /*
@@ -50,6 +51,13 @@ Route::middleware(['isLogin'])->group(function () {
             Route::delete('/delete/{id}', [CommentController::class, 'destroy'])->name('delete');
         });
     });
+
+    Route::prefix('/staff')->name('staff.')->group(function () {
+        Route::get('/pengaduan', [ResponseController::class, 'index'])->name('index');
+        Route::post('/pengaduan/store/{id}', [ResponseController::class, 'store'])->name('store');
+        Route::get('/pengaduan/show/{id}', [ResponseController::class, 'show'])->name('show');
+    });
+
 
     Route::prefix('/head_staff')->name('head_staff.')->group(function () {
         Route::get('/user', [UserController::class, 'create'])->name('createUser');

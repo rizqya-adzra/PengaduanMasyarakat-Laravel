@@ -178,36 +178,36 @@
                 });
 
                 $('.voting-btn').on('click', function() {
-                    var reportId = $(this).data('id');
-                    var voted = $(this).data('voted');
+                var reportId = $(this).data('id');
+                var voted = $(this).data('voted');
 
-                    if (voted) {
-                        alert('Anda sudah menambahkan vote.');
-                        return;
-                    }
+                if (voted) {
+                    alert('Anda sudah menambahkan vote.');
+                    return;
+                }
 
-                    $.ajax({
-                        url: "{{ route('guest.vote', ':id') }}".replace(':id', reportId),
-                        type: 'POST',
-                        data: {
-                            _token: '{{ csrf_token() }}',
-                        },
-                        success: function(response) {
-                            if (response.message) {
-                                $('.voting-btn[data-id="' + reportId + '"] i').addClass(
-                                    'text-danger');
-                                $('.voting-btn[data-id="' + reportId + '"] .text-muted').text(
-                                    response.count + ' votes');
-                                $('.voting-btn[data-id="' + reportId + '"]').data('voted', true);
-                            } else {
-                                alert(response.error);
-                            }
-                        },
-                        error: function(error) {
-                            alert('Ada kesalahan, coba lagi nanti.');
+                $.ajax({
+                    url: "{{ route('guest.vote', ':id') }}".replace(':id', reportId),
+                    type: 'POST',
+                    data: {
+                        _token: '{{ csrf_token() }}',
+                    },
+                    success: function(response) {
+                        if (response.message) {
+                            $('.voting-btn[data-id="' + reportId + '"] i').addClass(
+                                'text-danger');
+                            $('.voting-btn[data-id="' + reportId + '"] .text-muted').text(
+                                response.count + ' votes');
+                            $('.voting-btn[data-id="' + reportId + '"]').data('voted', true);
+                        } else {
+                            alert(response.error);
                         }
-                    });
+                    },
+                    error: function(error) {
+                        alert('Ada kesalahan, coba lagi nanti.');
+                    }
                 });
+            });
             });
         </script>
     @endpush

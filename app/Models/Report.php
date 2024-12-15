@@ -20,4 +20,9 @@ class Report extends Model
     {
         return $this->belongsTo(Comment::class);
     }
+
+    public function response()
+    {
+        return $this->belongsTo(Response::class);
+    }
 }
