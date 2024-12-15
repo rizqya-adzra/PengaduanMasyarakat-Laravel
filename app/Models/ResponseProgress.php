@@ -12,4 +12,10 @@ class ResponseProgress extends Model
     protected $fillable = [
         'response_id', 'histories'
     ];
+
+    public function response()
+    {
+        return $this->belongsTo(Response::class, 'response_id', 'id');
+    }
+    
 }

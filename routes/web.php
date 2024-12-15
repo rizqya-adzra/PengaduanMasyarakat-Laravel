@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\CommentController;
+use App\Http\Controllers\HeadStaffController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ResponseController;
@@ -51,16 +52,20 @@ Route::middleware(['isLogin'])->group(function () {
             Route::delete('/delete/{id}', [CommentController::class, 'destroy'])->name('delete');
         });
     });
-
+    
     Route::prefix('/staff')->name('staff.')->group(function () {
         Route::get('/pengaduan', [ResponseController::class, 'index'])->name('index');
         Route::post('/pengaduan/store/{id}', [ResponseController::class, 'store'])->name('store');
         Route::get('/pengaduan/show/{id}', [ResponseController::class, 'show'])->name('show');
+        Route::post('/pengaduan/store_progress/{id}', [ResponseController::class, 'storeProgress'])->name('storeProgress');
     });
 
-
     Route::prefix('/head_staff')->name('head_staff.')->group(function () {
-        Route::get('/user', [UserController::class, 'create'])->name('createUser');
-        Route::post('/store', [UserController::class, 'store'])->name('storeUser');
+        Route::get('/home', [HeadStaffController::class, 'index'])->name('index'); // List akun STAFF
+        Route::get('/user', [HeadStaffController::class, 'create'])->name('create'); // Form tambah user
+        Route::post('/user', [HeadStaffController::class, 'store'])->name('store'); // Simpan user baru
+        Route::get('/reportsbyprovince', [HeadStaffController::class, 'getReportsByProvince'])->name('reports.by.province');
+        Route::delete('/user/{id}', [HeadStaffController::class, 'destroy'])->name('destroy'); // Hapus user
+        Route::post('/user/{id}/reset-password', [HeadStaffController::class, 'resetPassword'])->name('reset.password'); // Reset password
     });
 });

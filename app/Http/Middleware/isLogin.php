@@ -21,7 +21,7 @@ class IsLogin
         } else if ($request->routeIs('login')) {
             return $next($request);
         } else {
-            return redirect()->route('login')->with('canAccess', 'Silahkan Login terlebih dahulu!');
+            return redirect()->route('login')->with('failed', 'Silahkan Login terlebih dahulu!');
         }
         
     }

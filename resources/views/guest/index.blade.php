@@ -106,10 +106,10 @@
                 });
 
                 $('#search').on('change', function() {
-                    var provinceId = $(this).val(); 
+                    var provinceId = $(this).val();
 
                     $.ajax({
-                        url: "{{ route('guest.search') }}", 
+                        url: "{{ route('guest.search') }}",
                         type: "GET",
                         data: {
                             search: provinceId
@@ -118,10 +118,14 @@
                             $('#reports-list').empty();
 
                             response.forEach(function(report) {
-                                const provinceName = JSON.parse(report.province || '{}').name || 'Tidak diketahui';
-                                const regencyName = JSON.parse(report.regency || '{}').name || 'Tidak diketahui';
-                                const subdistrictName = JSON.parse(report.subdistrict || '{}').name || 'Tidak diketahui';
-                                const villageName = JSON.parse(report.village || '{}').name || 'Tidak diketahui'
+                                const provinceName = JSON.parse(report.province || '{}')
+                                    .name || 'Tidak diketahui';
+                                const regencyName = JSON.parse(report.regency || '{}')
+                                    .name || 'Tidak diketahui';
+                                const subdistrictName = JSON.parse(report.subdistrict ||
+                                    '{}').name || 'Tidak diketahui';
+                                const villageName = JSON.parse(report.village || '{}')
+                                    .name || 'Tidak diketahui'
                                 // Buat objek tanggal dari created_at
                                 const createdAt = new Date(report.created_at);
 
@@ -178,36 +182,36 @@
                 });
 
                 $('.voting-btn').on('click', function() {
-                var reportId = $(this).data('id');
-                var voted = $(this).data('voted');
+                    var reportId = $(this).data('id');
+                    var voted = $(this).data('voted');
 
-                if (voted) {
-                    alert('Anda sudah menambahkan vote.');
-                    return;
-                }
-
-                $.ajax({
-                    url: "{{ route('guest.vote', ':id') }}".replace(':id', reportId),
-                    type: 'POST',
-                    data: {
-                        _token: '{{ csrf_token() }}',
-                    },
-                    success: function(response) {
-                        if (response.message) {
-                            $('.voting-btn[data-id="' + reportId + '"] i').addClass(
-                                'text-danger');
-                            $('.voting-btn[data-id="' + reportId + '"] .text-muted').text(
-                                response.count + ' votes');
-                            $('.voting-btn[data-id="' + reportId + '"]').data('voted', true);
-                        } else {
-                            alert(response.error);
-                        }
-                    },
-                    error: function(error) {
-                        alert('Ada kesalahan, coba lagi nanti.');
+                    if (voted) {
+                        alert('Anda sudah menambahkan vote.');
+                        return;
                     }
+
+                    $.ajax({
+                        url: "{{ route('guest.vote', ':id') }}".replace(':id', reportId),
+                        type: 'POST',
+                        data: {
+                            _token: '{{ csrf_token() }}',
+                        },
+                        success: function(response) {
+                            if (response.message) {
+                                $('.voting-btn[data-id="' + reportId + '"] i').addClass(
+                                    'text-danger');
+                                $('.voting-btn[data-id="' + reportId + '"] .text-muted').text(
+                                    response.count + ' votes');
+                                $('.voting-btn[data-id="' + reportId + '"]').data('voted', true);
+                            } else {
+                                alert(response.error);
+                            }
+                        },
+                        error: function(error) {
+                            alert('Ada kesalahan, coba lagi nanti.');
+                        }
+                    });
                 });
-            });
             });
         </script>
     @endpush

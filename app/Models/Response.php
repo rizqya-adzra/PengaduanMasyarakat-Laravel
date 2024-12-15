@@ -10,11 +10,20 @@ class Response extends Model
     use HasFactory;
 
     protected $fillable = [
-        'report_id', 'response_status', 'staff_id'
+        'report_id',
+        'response_status',
+        'staff_id'
     ];
+
 
     public function report()
     {
-        return $this->belongsTo(Report::class);
+        return $this->belongsTo(Report::class, 'report_id', 'id');
     }
+
+public function response_progress()
+{
+    return $this->hasMany(ResponseProgress::class, 'response_id', 'id');
+}
+
 }

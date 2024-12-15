@@ -18,11 +18,11 @@ class Report extends Model
 
     public function comment()
     {
-        return $this->belongsTo(Comment::class);
+        return $this->hasMany(Comment::class, 'id', 'report_id');
     }
 
     public function response()
     {
-        return $this->belongsTo(Response::class);
+        return $this->hasOne(Response::class, 'id', 'report_id');
     }
 }

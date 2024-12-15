@@ -36,7 +36,6 @@ class UserController extends Controller
     public function create()
     {
         $staffs = StaffProvince::all();
-        // Ambil semua user yang memiliki role 'STAFF'
         $users = User::where('role', 'STAFF')->get();
     
         // Kirim data ke view

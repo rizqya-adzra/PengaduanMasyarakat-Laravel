@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Comment;
 use App\Models\Report;
+use App\Models\Response;
+use App\Models\ResponseProgress;
 use Illuminate\Http\Request;
 use illuminate\Support\Facades\Auth;
 
@@ -20,11 +22,13 @@ class ReportController extends Controller
 
     public function dashboard()
     {
-        $reports = Report::all();
-        $comments = Comment::all();
-        return view('guest.dashboard', compact('reports', 'comments'));
+        $reports = Report::with('response.response_progress')->get();    
+        $responses = Response::all(); 
+        $response_progresses = ResponseProgress::all();
+    
+        return view('guest.dashboard', compact('reports', 'responses', 'response_progresses'));
     }
-
+    
     /**
      * Show the form for creating a new resource.
      */
@@ -95,9 +99,6 @@ class ReportController extends Controller
         $reports = Report::find($id);  
         return view('guest.showDashboard', compact('reports'));
     }
-
-
-
     /**
      * Show the form for editing the specified resource.
      */
@@ -130,19 +131,14 @@ class ReportController extends Controller
 
     public function vote($id, Request $request)
     {
-        $userId = auth()->id(); // Ambil ID pengguna yang login
+        $userId = auth()->id(); 
 
         $report = Report::findOrFail($id);
 
-        // Cek apakah pengguna sudah memberikan suara
         if (in_array($userId, $report->voting)) {
             return response()->json(['error' => 'You have already voted for this report.'], 403);
         }
-
-        // Tambahkan ID pengguna ke array voting
         $report->voting = array_merge($report->voting, [$userId]);
-
-        // Update jumlah voting (jika diperlukan)
         $voteCount = count($report->voting);
 
         $report->save();

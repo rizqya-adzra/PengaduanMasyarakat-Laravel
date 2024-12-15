@@ -29,7 +29,7 @@
                                 {{ json_decode($report->regency)->name }},
                                 {{ json_decode($report->subdistrict)->name }},
                                 {{ json_decode($report->village)->name }}</td>
-                            <td>{{ $report->description }}</td>
+                            <td><a class="text-dark" href="{{ route('staff.show', $report['id']) }}">{{ $report->description }}</a></td>
                             <td>{{ count($report->voting) }}</td>
                             <td>
                                 <div class="dropdown">
@@ -38,7 +38,8 @@
                                         Aksi
                                     </button>
                                     <ul class="dropdown-menu">
-                                        <li onclick="addModal('{{ $report->id }}', '{{ $report->response_status }}')">Tindak Lanjut
+                                        <li onclick="addModal('{{ $report->id }}', '{{ $report->response_status }}')">
+                                            Tindak Lanjut
                                         </li>
                                     </ul>
                                 </div>
@@ -80,7 +81,6 @@
             </form>
         </div>
     </div>
-    
 @endsection
 
 @push('script')
@@ -92,29 +92,28 @@
         }
 
         $('#form-add-response').on('submit', function(e) {
-    e.preventDefault(); // Prevent default form submission
+            e.preventDefault(); // Prevent default form submission
 
-    let id = $('#response-id').val(); // Ambil ID report yang ingin ditindaklanjuti
-    let responseStatus = $('#response_status').val(); // Ambil status response yang dipilih
-    let actionUrl = "{{ url('/staff/pengaduan/store') }}/" + id; // URL untuk menambah data
+            let id = $('#response-id').val(); // Ambil ID report yang ingin ditindaklanjuti
+            let responseStatus = $('#response_status').val(); // Ambil status response yang dipilih
+            let actionUrl = "{{ url('/staff/pengaduan/store') }}/" + id; // URL untuk menambah data
 
-    $.ajax({
-        url: actionUrl,
-        type: 'POST',
-        data: {
-            _token: '{{ csrf_token() }}', // Token CSRF
-            response_status: responseStatus, // Kirim status response
-        },
-        success: function(response) {
-            $('#addModal').modal('hide');
-            location.reload(); // Reload halaman setelah berhasil
-            alert('Response berhasil ditambahkan!');
-        },
-        error: function(err) {
-            alert('Gagal menambahkan response');
-        }
-    });
-});
-
+            $.ajax({
+                url: actionUrl,
+                type: 'POST',
+                data: {
+                    _token: '{{ csrf_token() }}', // Token CSRF
+                    response_status: responseStatus, // Kirim status response
+                },
+                success: function(response) {
+                    $('#addModal').modal('hide');
+                    window.location.href = "{{ url('/staff/pengaduan/show') }}/" + id; // Reload halaman setelah berhasil
+                    alert('Response berhasil ditambahkan!');
+                },
+                error: function(err) {
+                    alert('Gagal menambahkan response');
+                }
+            });
+        });
     </script>
 @endpush

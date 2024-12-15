@@ -46,6 +46,7 @@ class User extends Authenticatable
 
     public function StaffProvince()
     {
-        return $this->belongsTo(StaffProvince::class);
+        // Relasi one to one
+        return $this->hasOne(StaffProvince::class, 'user_id', 'id');
     }
 }

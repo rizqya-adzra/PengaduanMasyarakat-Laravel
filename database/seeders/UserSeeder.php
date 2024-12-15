@@ -2,10 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\User;
-Use Illuminate\Support\Facades\Hash;
+use App\Models\StaffProvince;
+use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
@@ -16,23 +16,30 @@ class UserSeeder extends Seeder
     {
         User::create([
             'name' => 'tamu',
-            'email' => 'tamu',
+            'email' => 'tamu@gmail.com',
             'password' => Hash::make('tamu'),
             'role' => 'GUEST'
         ]);
 
         User::create([
             'name' => 'staf',
-            'email' => 'staf',
+            'email' => 'staf@gmail.com',
             'password' => Hash::make('staf'),
             'role' => 'STAFF'
         ]);
 
-        User::create([
-            'name' => 'hed',
-            'email' => 'hed',
-            'password' => Hash::make('hed'),
+        $headStaff = User::create([
+            'name' => 'head',
+            'email' => 'head@gmail.com',
+            'password' => Hash::make('head'),
             'role' => 'HEAD_STAFF'
+        ]);
+
+        StaffProvince::create([
+            'user_id' => $headStaff->id,
+            'province' => 'JAWA BARAT',
+            'created_at' => now(),
+            'updated_at' => now()
         ]);
     }
 }
