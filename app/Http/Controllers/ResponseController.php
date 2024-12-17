@@ -14,11 +14,17 @@ class ResponseController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $sortOrder = $request->get('sort', 'desc');
+        $startDate = $request->get('start_date'); 
+        $endDate = $request->get('end_date');
+        $reports = Report::with('user')->orderBy('voting', $sortOrder)->get();
+        if ($startDate && $endDate) {
+            $reports->whereBetween('created_at', [$startDate, $endDate]);
+        }
         $responses = Response::all();
-        $reports = Report::all();
-        return view('staff.index', compact('reports', 'responses'));
+        return view('staff.index', compact('reports', 'responses', 'sortOrder', 'sortOrder', 'startDate', 'endDate'));
     }
 
     /**
@@ -69,7 +75,7 @@ class ResponseController extends Controller
 
     public function show(string $id)
     {
-        $report = Report::find($id);
+        $report = Report::with('user')->find($id);
 
         if ($report) {
             $responses = Response::where('report_id', $report->id)->get();
@@ -124,7 +130,24 @@ class ResponseController extends Controller
     }
 
 
+    public function updateStatus(Request $request, $id)
+    {
+        try {
+            $response = Response::findOrFail($id);
+            $response->response_status = $request->input('response_status'); // 'DONE'
+            $response->save();
 
+            return response()->json([
+                'success' => true,
+                'message' => 'Status berhasil diubah menjadi DONE.'
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal mengubah status.'
+            ], 500);
+        }
+    }
 
     /**
      * Show the form for editing the specified resource.

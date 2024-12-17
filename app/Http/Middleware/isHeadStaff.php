@@ -4,10 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Support\Facades\Auth;
+use Symfony\Component\HttpFoundation\Response;
 
-class IsLogin
+class isHeadStaff
 {
     /**
      * Handle an incoming request.
@@ -15,11 +15,12 @@ class IsLogin
      * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
      */
     public function handle(Request $request, Closure $next): Response
-    {   
-        if (Auth::check()) {
+    {
+        if (Auth::user()->role == "HEAD_STAFF") {
             return $next($request);
         } else {
-            return redirect()->route('landing')->with('failed', 'Silahkan Login terlebih dahulu!');
+            return redirect()->route('errors.permission');
         }
+
     }
 }

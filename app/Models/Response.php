@@ -15,15 +15,19 @@ class Response extends Model
         'staff_id'
     ];
 
-
     public function report()
     {
         return $this->belongsTo(Report::class, 'report_id', 'id');
     }
 
-public function response_progress()
-{
-    return $this->hasMany(ResponseProgress::class, 'response_id', 'id');
-}
+    public function response_progress()
+    {
+        return $this->hasMany(ResponseProgress::class);
+    }
 
+    public function staff()
+    {
+        return $this->belongsTo(User::class);
+    }
+    
 }

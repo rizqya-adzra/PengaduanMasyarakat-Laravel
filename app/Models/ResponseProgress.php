@@ -15,7 +15,12 @@ class ResponseProgress extends Model
 
     public function response()
     {
-        return $this->belongsTo(Response::class, 'response_id', 'id');
+        return $this->belongsTo(Response::class);
+    }
+
+    public function staff() 
+    {
+        return $this->belongsTo(StaffProvince::class);
     }
     
 }

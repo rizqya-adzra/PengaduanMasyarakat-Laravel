@@ -23,6 +23,11 @@ class Report extends Model
 
     public function response()
     {
-        return $this->hasOne(Response::class, 'id', 'report_id');
+        return $this->hasOne(Response::class);
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 }

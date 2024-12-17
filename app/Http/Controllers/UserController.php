@@ -37,11 +37,11 @@ class UserController extends Controller
     {
         $staffs = StaffProvince::all();
         $users = User::where('role', 'STAFF')->get();
-    
+
         // Kirim data ke view
         return view('head_staff.createUser', compact('users', 'staffs'));
     }
-    
+
 
     /**
      * Store a newly created resource in storage.
@@ -54,7 +54,7 @@ class UserController extends Controller
             'password' => 'required',
         ]);
 
-        $role = 'STAFF'; 
+        $role = 'STAFF';
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -104,25 +104,53 @@ class UserController extends Controller
 
     public function loginAuth(Request $request)
     {
-        $request->validate(
-            [
-                'name' => 'required',
-                'email' => 'required',
-                'password' => 'required',
-            ],
-        );
+        $request->validate([
+            'name' => 'required_if:isCreatingAccount,true',
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
 
-        $proses = $request->only(['name', 'email', 'password']);
-        if (Auth::attempt($proses)) {
-            return redirect()->route('guest.index')->with('success', 'Login berhasil');
-        } else {
-            return redirect()->back()->with('failed', 'Login gagal, silahkan coba lagi');
+        // Ambil data user berdasarkan email
+        $user = User::where('email', $request->email)->first();
+
+        if ($request->isCreatingAccount == 'true') {
+            // Cek apakah akun sudah ada
+            if ($user) {
+                return redirect()->back()->with('failed', 'Akun sudah ada. Silahkan login.');
+            }
+
+            // Buat akun baru
+            $newUser = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'password' => bcrypt($request->password),
+            ]);
+
+            // Login setelah pembuatan akun berhasil
+            Auth::login($newUser);
+            return redirect()->route('guest.index')->with('success', 'Membuat akun dan login berhasil.');
         }
 
-        if (!Auth::check()) {
-            return response()->json(['success' => false, 'message' => 'Anda harus login untuk memberikan voting.']);
+        // Jika login biasa
+        if ($user && Auth::attempt($request->only('email', 'password'))) {
+            // Mapping role ke route
+            $routes = [
+                'STAFF' => 'staff.index',
+                'GUEST' => 'guest.index',
+                'HEAD_STAFF' => 'head_staff.index',
+            ];
+        
+            // Ambil role dan redirect sesuai mapping, default ke 'home' jika role tidak ditemukan
+            $role = Auth::user()->role;
+            $route = $routes[$role] ?? 'home';
+        
+            return redirect()->route($route)->with('success', "Login berhasil sebagai $role.");
         }
+        
+
+        return redirect()->back()->with('failed', 'Login gagal. Silahkan cek kembali data Anda.');
     }
+
 
     public function logout()
     {

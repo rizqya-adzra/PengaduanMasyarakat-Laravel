@@ -14,30 +14,30 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'tamu',
-            'email' => 'tamu@gmail.com',
-            'password' => Hash::make('tamu'),
-            'role' => 'GUEST'
-        ]);
+        // User::create([
+        //     'name' => 'tamu',
+        //     'email' => 'tamu@gmail.com',
+        //     'password' => Hash::make('tamu'),
+        //     'role' => 'GUEST'
+        // ]);
 
-        User::create([
-            'name' => 'staf',
-            'email' => 'staf@gmail.com',
-            'password' => Hash::make('staf'),
-            'role' => 'STAFF'
-        ]);
+        // User::create([
+        //     'name' => 'staf',
+        //     'email' => 'staf@gmail.com',
+        //     'password' => Hash::make('staf'),
+        //     'role' => 'STAFF'
+        // ]);
 
         $headStaff = User::create([
-            'name' => 'head',
-            'email' => 'head@gmail.com',
+            'name' => 'headjatim',
+            'email' => 'headjatim@gmail.com',
             'password' => Hash::make('head'),
             'role' => 'HEAD_STAFF'
         ]);
 
         StaffProvince::create([
             'user_id' => $headStaff->id,
-            'province' => 'JAWA BARAT',
+            'province' => 'JAWA TIMUR',
             'created_at' => now(),
             'updated_at' => now()
         ]);

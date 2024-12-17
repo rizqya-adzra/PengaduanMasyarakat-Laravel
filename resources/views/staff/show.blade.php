@@ -28,8 +28,10 @@
     <div class="container bg-white mt-5 p-5">
         <div class="d-flex justify-content-between">
             <div>
-                <h3><b>{{ $reports->first()->user_id }}</b></h3>
-                <p>Pada tanggal {{ $reports->first()->created_at }} <b>Status Tanggapan:</b>
+                <h3><span style="color: {{ $reports->first()->user ? 'black' : 'red' }};">
+                    {{ $reports->first()->user->email ?? 'User Tidak Ditemukan' }}
+                </span></h3>
+                <p>Pada tanggal {{ \Carbon\Carbon::parse($reports->first()->created_at)->translatedFormat('d F Y') }} <b>Status Tanggapan:</b> </p>
                 <p
                     class="btn 
                     @if ($responses->first()->response_status === 'DONE') btn-success 
@@ -37,7 +39,6 @@
                     @elseif ($responses->first()->response_status === 'ON_PROCESS') btn-warning @endif">
                     {{ $responses->first()->response_status }}
                 </p>
-
             </div>
             <div>
                 <a class="btn btn-secondary" href="{{ route('staff.index') }}">Kembali</a>
@@ -46,34 +47,37 @@
         <div class="row">
             <div class="col-lg-6">
                 <b>
-                    {{ json_decode($reports->first()->province)->name }},
+                    {{ json_decode($reports->first()->province)->name }} ,
                     {{ json_decode($reports->first()->regency)->name }},
                     {{ json_decode($reports->first()->subdistrict)->name }},
                     {{ json_decode($reports->first()->village)->name }}
                 </b>
-                <p>
-                    {{ $reports->first()->description }}
-                </p>
+                <p>{{ $reports->first()->description }}</p>
                 <img src="{{ asset('storage/' . $reports->first()->image) }}" class="img-fluid rounded shadow-sm"
                     alt="Gambar Artikel" style="width: 50%; max-width: 200px;">
             </div>
             <div class="col-lg-6">
                 <div>
                     @foreach ($response_progresses as $response_progress)
-                    <ul>
-                        <li> {{ json_decode($response_progress->histories)->note }} </li>
-                    </ul>
+                        <ul>
+                            <li> {{ json_decode($response_progress->histories)->note }} </li>
+                        </ul>
                     @endforeach
                 </div>
             </div>
         </div>
         <div class="d-flex justify-content-end">
-            <button class="btn btn-success">Nyatakan Selesai</button>
+            @if ($responses->first()->response_status === 'REJECT')
+            <p class="text-danger">Pengaduan telah Anda tolak!</p>
+            @else
+            <button class="btn btn-success" onclick="showConfirmationModal()">Nyatakan Selesai</button>
             <button onclick="addModal('{{ $responses->first()->id }}', '{{ $responses->first()->histories }}')"
                 class="btn btn-light">Tambah Progress</button>
+            @endif
         </div>
     </div>
 
+    <!-- Modal Tambah Progress -->
     <div class="modal fade" id="addModal" tabindex="-1" aria-labelledby="addResponseTable" aria-hidden="true">
         <div class="modal-dialog">
             <form id="form-add-progress" method="POST">
@@ -99,6 +103,26 @@
             </form>
         </div>
     </div>
+
+    <!-- Modal Konfirmasi -->
+    <div class="modal fade" id="confirmationModal" tabindex="-1" aria-labelledby="confirmationModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmationModalLabel">Konfirmasi Aksi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah Anda yakin ingin menyelesaikan pengaduan ini?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+                    <button type="button" id="confirmYes" class="btn btn-primary">Yes</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @push('script')
@@ -111,40 +135,72 @@
         });
 
         function addModal(id, histories) {
-    $('#histories-id').val(id); // Set ID untuk input hidden
-    $('#histories').val(histories || ''); // Set string histories jika ada, kosongkan jika tidak ada
-    $('#addModal').modal('show'); // Tampilkan modal
-}
-
-$('#form-add-progress').on('submit', function(e) {
-    e.preventDefault(); // Prevent form default submit
-
-    let id = $('#histories-id').val(); // Ambil ID
-    let progress = $('#histories').val(); // Ambil input histories (string)
-    let actionUrl = "{{ url('/staff/pengaduan/store_progress') }}/" + id; // URL target
-
-    $.ajax({
-        url: actionUrl,
-        type: 'POST',
-        contentType: 'application/json', // Format JSON
-        data: JSON.stringify({
-            _token: '{{ csrf_token() }}', // Token CSRF
-            histories: progress, // Kirim string histories langsung
-        }),
-        success: function(response) {
-            if (response.success) {
-                $('#addModal').modal('hide');
-                alert(response.message);
-                location.reload(); // Reload jika sukses
-            } else {
-                alert(response.message);
-            }
-        },
-        error: function(err) {
-            alert('Gagal menambahkan response');
+            $('#histories-id').val(id);
+            $('#histories').val(histories || '');
+            $('#addModal').modal('show');
         }
-    });
-});
 
+        $('#form-add-progress').on('submit', function(e) {
+            e.preventDefault();
+
+            let id = $('#histories-id').val();
+            let progress = $('#histories').val();
+            let actionUrl = "{{ url('/staff/pengaduan/store_progress') }}/" + id;
+
+            $.ajax({
+                url: actionUrl,
+                type: 'POST',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    _token: '{{ csrf_token() }}',
+                    histories: progress,
+                }),
+                success: function(response) {
+                    if (response.success) {
+                        $('#addModal').modal('hide');
+                        alert(response.message);
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(err) {
+                    alert('Gagal menambahkan response');
+                }
+            });
+        });
+
+        function showConfirmationModal() {
+            $('#confirmationModal').modal('show');
+            $('#confirmYes').off('click').on('click', function() {
+                updateStatusToDone();
+            });
+        }
+
+        function updateStatusToDone() {
+            let id = "{{ $responses->first()->id }}";
+            let actionUrl = "{{ url('/staff/pengaduan/update_status') }}/" + id;
+
+            $.ajax({
+                url: actionUrl,
+                type: 'PUT',
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    _token: '{{ csrf_token() }}',
+                    response_status: 'DONE'
+                }),
+                success: function(response) {
+                    if (response.success) {
+                        alert(response.message);
+                        location.reload();
+                    } else {
+                        alert(response.message);
+                    }
+                },
+                error: function(err) {
+                    alert('Gagal mengubah status.');
+                }
+            });
+        }
     </script>
 @endpush

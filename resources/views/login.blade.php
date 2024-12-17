@@ -1,11 +1,11 @@
 @extends('templates.app', ['title' => 'Login | Pengaduan Masyarakat'])
 
 @section('dynamic-contents')
-@if (Session::get('canAccess'))
+@if (Session::get('failed'))
         <div class="toast align-items-center text-bg-danger border-0 position-fixed bottom-0 end-0 m-3 mb-4 p-2 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true" id="toast">
             <div class="d-flex">
               <div class="toast-body">
-                Silahkan Login terlebih dahulu!
+                {{ Session::get('failed') }}
               </div>
               <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
             </div>
@@ -31,10 +31,10 @@
                     <label for="password" class="form-label fw-semibold" style="color: #495E57;">Password</label>
                     <input type="password" name="password" class="form-control form-control" id="password" placeholder="Masukan password">
                 </div>
-                <div class="mb-3 text-center">
-                    <p class="mb-1" style="font-size: 0.9rem;">Belum punya akun? <a href="{{ route('register') }}" class="text-decoration-none fw-bold" style="color: #495E57;">Daftar di sini</a></p>
-                </div>
-                <button type="submit" class="btn btn w-100" style="background-color: #FBD46D; color: #495E57; font-weight: bold;">Login</button>
+                <div class="text-center">
+                    <button type="submit" name="isCreatingAccount" value="true" class="btn btn w-100 mb-2" style="background-color: #495E57 ; color: #FBD46D; font-weight: bold;">Buat Akun</button>
+                    <button type="submit" name="isCreatingAccount" value="false" class="btn btn w-100" style="background-color: #FBD46D; color: #495E57; font-weight: bold;">Login</button>
+                </div>                
             </form>
         </div>
         

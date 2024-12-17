@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ReportExport;
 use App\Models\Comment;
 use App\Models\Report;
 use App\Models\Response;
 use App\Models\ResponseProgress;
 use Illuminate\Http\Request;
 use illuminate\Support\Facades\Auth;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ReportController extends Controller
 {
@@ -16,19 +18,18 @@ class ReportController extends Controller
      */
     public function index(Request $request)
     {
-        $reports = Report::all();
+        $reports = Report::where('user_id', Auth::id())->get();
         return view('guest.index', compact('reports'));
     }
 
     public function dashboard()
     {
-        $reports = Report::with('response.response_progress')->get();    
-        $responses = Response::all(); 
-        $response_progresses = ResponseProgress::all();
-    
-        return view('guest.dashboard', compact('reports', 'responses', 'response_progresses'));
+        $reports = Report::with('response.response_progress')->where('user_id', Auth::id())->latest()->get();
+        $responses = Response::all();
+        $response_progress = ResponseProgress::all();
+        return view('guest.dashboard', compact('reports', 'responses', 'response_progress'));
     }
-    
+
     /**
      * Show the form for creating a new resource.
      */
@@ -50,10 +51,13 @@ class ReportController extends Controller
             'subdistrict' => 'required',
             'village' => 'required',
             'image' => 'required',
+            'statement' => 'nullable',
         ]);
 
         $file = $request->file('image');
         $filePath = $file->storeAs('uploads', time() . '_' . $file->getClientOriginalName(), 'public');
+
+        $statement = $request->has('statement') && $request->statement === 'on';
 
         $process = Report::create([
             'user_id' => Auth::user()->id,
@@ -64,11 +68,11 @@ class ReportController extends Controller
             'subdistrict' => $request->subdistrict,
             'village' => $request->village,
             'image' => $filePath,
-            'statement' => 1,
+            'statement' => $statement,
         ]);
 
         if ($process) {
-            return redirect()->route('guest.create')->with('success', 'Pengaduan Berhasil ditambahkan!');
+            return redirect()->route('guest.dashboard')->with('success', 'Pengaduan Berhasil ditambahkan!');
         } else {
             return redirect()->back()->with('failed', 'Pengaduan gagal ditambahkan! silahkan coba kembali');
         }
@@ -90,18 +94,9 @@ class ReportController extends Controller
             $comments = [];
         }
 
-        // Kirim data ke view
         return view('guest.show', compact('reports', 'comments'));
     }
 
-    public function showDashboard($id)
-    {
-        $reports = Report::find($id);  
-        return view('guest.showDashboard', compact('reports'));
-    }
-    /**
-     * Show the form for editing the specified resource.
-     */
     public function edit(string $id)
     {
         //
@@ -131,7 +126,7 @@ class ReportController extends Controller
 
     public function vote($id, Request $request)
     {
-        $userId = auth()->id(); 
+        $userId = auth()->id();
 
         $report = Report::findOrFail($id);
 
@@ -149,6 +144,19 @@ class ReportController extends Controller
         ]);
     }
 
+    public function views($id)
+    {
+        try {
+            $report = Report::findOrFail($id);
+            $report->increment('viewers'); // Tambah jumlah views
+            return response()->json([
+                'success' => true,
+                'views' => $report->viewers,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false], 500);
+        }
+    }
 
 
     public function searchByProvince(Request $request)
@@ -166,5 +174,23 @@ class ReportController extends Controller
         }
 
         return response()->json($reports);
+    }
+
+    public function exportExcel(Request $request)
+    {
+        // Menyimpan filter tanggal
+        $dateFilter = $request->get('date_filter');
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+
+        $file_name = 'data_pengaduan' . '.xlsx';
+
+        // Mengecek apakah filter tanggal diterapkan
+        if ($dateFilter === 'custom' && $startDate && $endDate) {
+            return Excel::download(new ReportExport($startDate, $endDate), $file_name);
+        }
+
+        // Jika tidak ada filter tanggal, ekspor seluruh data
+        return Excel::download(new ReportExport(), $file_name);
     }
 }

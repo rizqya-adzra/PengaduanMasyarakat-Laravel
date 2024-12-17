@@ -10,18 +10,15 @@
 @push('script')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Ambil data laporan dari backend
             fetch('{{ route("head_staff.reports.by.province") }}')
                 .then(response => response.json())
                 .then(data => {
-                    // Parse data untuk Chart.js
-                    const labels = data.map(item => item.province_name); // Ambil nama provinsi
-                    const totalReports = data.map(item => item.total_reports); // Jumlah laporan
-                    const doneCount = data.map(item => item.done_count); // Jumlah DONE
-                    const onProcessCount = data.map(item => item.on_process_count); // Jumlah ON_PROCESS
-                    const rejectCount = data.map(item => item.reject_count); // Jumlah REJECT
+                    const labels = data.map(item => item.province_name);
+                    const totalReports = data.map(item => item.total_reports); 
+                    const doneCount = data.map(item => item.done_count); 
+                    const onProcessCount = data.map(item => item.on_process_count); 
+                    const rejectCount = data.map(item => item.reject_count); 
 
-                    // Konfigurasi Chart.js
                     const ctx = document.getElementById('reportsChart').getContext('2d');
                     new Chart(ctx, {
                         type: 'bar',

@@ -32,21 +32,27 @@
                     <img src="{{ asset('storage/' . $reports->first()->image) }}" class="img-fluid rounded shadow-sm"
                         alt="Gambar Artikel" style="width: 50%; max-width: 200px;">
                     <div class="ms-4">
-                        <h4 class="fw-bold"><a class="text-dark" href="">{{ $reports->first()->description }}
+                        <h4 class="fw-bold"><a class="text-dark" href="">{{ Str::limit($reports->first()->description, 30) }}
                             </a></h4>
                         <p class="text-muted" style="font-size: 0.9rem;">
                             {{ $reports->first()->description }}
                         </p>
+                        <p> {{ $reports->first()->user->email }} </p>
                         <div>
                             <small> {{ $reports->first()->created_at->format('d M Y H:i') }} </small>
+                            <br>
                             <small> {{ json_decode($reports->first()->province)->name }} </small>
                             <small> {{ json_decode($reports->first()->regency)->name }} </small>
                             <small> {{ json_decode($reports->first()->subdistrict)->name }} </small>
                             <small> {{ json_decode($reports->first()->village)->name }} </small>
                         </div>
                         <div class="mt-3 mb-2">
-                            <button type="button" class="btn btn-secondary shadow-sm btn-sm" data-bs-toggle="tooltip"
-                                data-bs-placement="top" title="Jenis Artikel">
+                            <button type="button" data-bs-toggle="tooltip"
+                                data-bs-placement="top" title="Jenis Artikel"
+                                class="btn 
+                                @if ($reports->first()->type === 'SOSIAL') btn-success 
+                                @elseif ($reports->first()->type === 'KEJAHATAN') btn-danger 
+                                @elseif ($reports->first()->type === 'PEMBANGUNAN') btn-warning @endif">
                                 {{ $reports->first()->type }}
                             </button>
                         </div>
@@ -78,14 +84,14 @@
                                     <li>
                                         <b>{{ $comment->user->email }}</b>
                                         <p>{{ $comment->comment }}</p>
-                                        <p><small>Dibuat pada: {{ $comment->created_at->format('d M Y H:i') }}</small></p>
+                                        <p><small>Dibuat pada: {{ \Carbon\Carbon::parse($comment->created_at)->translatedFormat('d F Y H ') }}
+                                        </small></p>
                                     </li>
                                 @endforeach
                             </ul>
                         @endif
                     </div>
                 </div>
-
 
                 <div class="mt-4">
                     <form action="{{ route('guest.comments.store', $reports->first()->id) }}"
@@ -136,13 +142,13 @@
     <script>
         $(document).ready(function() {
             if ($("#toast").length) {
-                var toast = new bootstrap.Toast(document.getElementById('toast'));
+                let toast = new bootstrap.Toast(document.getElementById('toast'));
                 toast.show();
             }
 
             $('.voting-btn').on('click', function() {
-                var reportId = $(this).data('id');
-                var voted = $(this).data('voted');
+                let reportId = $(this).data('id');
+                let voted = $(this).data('voted');
 
                 if (voted) {
                     alert('Anda sudah menambahkan vote.');

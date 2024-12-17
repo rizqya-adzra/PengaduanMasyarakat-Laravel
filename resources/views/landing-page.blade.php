@@ -6,17 +6,17 @@
                 <div class="toast align-items-center text-bg-danger border-0 position-fixed bottom-0 start-0 m-3 mb-4 p-2 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true" id="toast" >
                     <div class="d-flex">
                       <div class="toast-body">
-                        Anda telah Logout!
+                        {{ Session::get('success') }}
                       </div>
                       <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
                 </div>
         @endif
-        @if (Session::get('canAccess'))
+        @if (Session::get('failed'))
                 <div class="toast align-items-center text-bg-danger border-0 position-fixed bottom-0 start-0 m-3 mb-4 p-2 shadow-lg" role="alert" aria-live="assertive" aria-atomic="true" id="toast" >
                     <div class="d-flex">
                       <div class="toast-body">
-                        Silahkan Login terlebih dahulu!
+                        {{ Session::get('failed') }}
                       </div>
                       <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
                     </div>
@@ -52,7 +52,7 @@
     <div class="position-fixed top-50 end-0 p-5 d-flex flex-column" style="transform: translateY(-50%);">
         <a class="btn btn-lg mb-3" style="background-color: #FBD46D" href="{{ route('login') }}"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
         <button class="btn btn-lg mb-3" style="background-color: #FBD46D" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-info" aria-hidden="true"></i></button>
-        <a class="btn btn-lg mb-3" style="background-color: #FBD46D" href="{{ route('guest.create') }}"><i class="fa fa-pencil" aria-hidden="true" ></i></a>
+        <a class="btn btn-lg mb-3" style="background-color: #FBD46D" href="{{ route('guest.index') }}"><i class="fa fa-pencil" aria-hidden="true" ></i></a>
     </div>    
 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

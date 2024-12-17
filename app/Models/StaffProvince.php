@@ -18,8 +18,12 @@ class StaffProvince extends Model
         return $this->belongsTo(Comment::class);
     }
 
-    public function User()
+    public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class , 'id', 'user_id');
+    }
+
+    public function response(){
+        return $this->hasMany(Response::class);
     }
 }

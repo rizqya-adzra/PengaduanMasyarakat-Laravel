@@ -1,60 +1,30 @@
-{{-- @extends('templates.app', ['title' => 'Tambahkan data akun'])
-
-@section('dynamic-contents')
-<div class="container mt-5">
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="card p-5">
-                <h4>Akun Staff daerah Jawa Barat</h4>
-                    @foreach ($users as $user)
-                    <ul>
-                        <li> {{ $user['email'] }}</li>
-                        @foreach ($staffs as $staff)
-                        <li> {{ $staff['province'] }}</li>
-                        @endforeach
-                        <li> {{ $user['role'] }}</li>
-                    </ul>
-                    @endforeach
-                    </div>              
-                </div>
-            <div class="col-lg-6">
-                <form class="card p-5 " action="{{route('head_staff.store') }}" method="POST">
-                    @if (Session::get('failed'))
-                        <div class="alert alert-danger"> {{ Session::get('failed') }} </div>
-                    @endif
-                    @csrf
-                    <div class="form-group">
-                        <label class="form-label" for="">Nama</label>
-                        @error('name')
-                                <small class="text-danger"> {{ $message }} </small>    
-                        @enderror
-                        <input type="text" class="form-control" name="name">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label" for="">Email</label>
-                        @error('email')
-                                <small class="text-danger"> {{ $message }} </small>    
-                        @enderror
-                        <input type="text" class="form-control" name="email">
-                    </div>
-                    <div class="form-group">
-                        <label for="" class="form-label">Password</label>
-                        @error('password')
-                                <small class="text-danger"> {{ $message }} </small>    
-                        @enderror
-                        <input type="text" class="form-control" name="password">
-                    </div>
-                    <button class="btn btn-success mt-4" type="submit">Tambah Akun</button>
-                </form>
-            </div>
-        </div>
-    </div>
-
-@endsection --}}
-
 @extends('templates.app', ['title' => 'Kelola Akun STAFF'])
 
 @section('dynamic-contents')
+@if (Session::get('failed'))
+<div class="toast align-items-center text-bg-danger border-0 position-fixed bottom-0 end-0 m-3 mb-4 p-2 shadow-lg"
+    role="alert" aria-live="assertive" aria-atomic="true" id="toast">
+    <div class="d-flex">
+        <div class="toast-body">
+            {{ Session::get('failed') }}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+            aria-label="Close"></button>
+    </div>
+</div>
+@endif
+@if (Session::get('success'))
+<div class="toast align-items-center text-bg-success border-0 position-fixed bottom-0 end-0 m-3 mb-4 p-2 shadow-lg"
+    role="alert" aria-live="assertive" aria-atomic="true" id="toast">
+    <div class="d-flex">
+        <div class="toast-body">
+            {{ Session::get('success') }}
+        </div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+            aria-label="Close"></button>
+    </div>
+</div>
+@endif
 <div class="container mt-5">
     <div class="row">
         <div class="col-lg-6">
@@ -101,12 +71,6 @@
         <div class="col-lg-6">
             <div class="card p-4">
                 <h4>Tambah Akun STAFF {{ $province }}</h4>
-                @if (session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
-                @if (session('failed'))
-                    <div class="alert alert-danger">{{ session('failed') }}</div>
-                @endif
                 <form action="{{ route('head_staff.store') }}" method="POST">
                     @csrf
                     <div class="form-group">
@@ -129,3 +93,16 @@
     </div>
 </div>
 @endsection
+
+@push('script')
+    <script>
+        $(document).ready(function() {
+            if ($("#toast").length) {
+                var toast = new bootstrap.Toast(document.getElementById('toast'));
+                toast.show();
+            }
+        });
+    </script>
+@endpush
+
+

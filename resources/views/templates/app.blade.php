@@ -21,55 +21,79 @@
         </symbol>
     </svg>
     <title> {{ $title }} </title>
+    <link rel="stylesheet" href="{{ asset('assets/css/style.css') }}">
 </head>
 
 <body style="background-color: #F4F6FF;">
     @if (Auth::check())
-    <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary shadow-sm">
-        <div class="container-fluid d-flex justify-content-between align-items-center">
-                    <a class="navbar-brand" href="#">
-                        <h4>Pengaduan Masyarakat</h4>
-                    </a>
-                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-                        <span class="navbar-toggler-icon"></span>
-                    </button>
-                    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-                        <ul class="navbar-nav">
+        <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary shadow-sm">
+            <div class="container-fluid d-flex justify-content-between align-items-center">
+                <a class="navbar-brand" href="#">
+                    <h4>Pengaduan Masyarakat</h4>
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                    <ul class="navbar-nav">
+                        @if (Auth::user()->role == 'GUEST')
                             <li class="nav-item">
                                 <a class="nav-link {{ Route::is('guest.index') ? 'active' : '' }}" aria-current="page"
                                     href="{{ route('guest.index') }}">Home</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link {{ Route::is('guest.dashboard') ? 'active' : '' }}" href="{{ route('guest.dashboard') }}">Dashboard</a>
+                                <a class="nav-link {{ Route::is('guest.dashboard') ? 'active' : '' }}"
+                                    href="{{ route('guest.dashboard') }}">Dashboard</a>
                             </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" role="button" href="#"
-                                    data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img class="d-none d-lg-inline" style="width: 30px; border-radius: 100%"
-                                        src="{{ asset('assets/profile_default.jpg') }}" alt="">
-                                    <span class="d-lg-none">Akun</span>
-                                </a>
-                                <ul class="dropdown-menu dropdown-menu-end">
-                                    <li><a class="dropdown-item" href="">Lihat Profil</a></li>
-                                    <li><a class="dropdown-item text-danger" href="{{ route('logout') }}">Logout</a></li>
-                                </ul>
+                        @elseif (Auth::user()->role == 'STAFF')
+                            <li class="nav-item">
+                                <a class="nav-link {{ Route::is('staff.index') ? 'active' : '' }}" aria-current="page"
+                                    href="{{ route('staff.index') }}">Home</a>
                             </li>
-                        </ul>
-                    </div>
+                        @elseif (Auth::user()->role == 'HEAD_STAFF')
+                            <li class="nav-item">
+                                <a class="nav-link {{ Route::is('head_staff.index') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('head_staff.index') }}">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ Route::is('head_staff.create') ? 'active' : '' }}"
+                                    href="{{ route('head_staff.create') }}">Kelola Akun</a>
+                            </li>
+                        @endif
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" role="button" href="#" data-bs-toggle="dropdown"
+                                aria-expanded="false">
+                                <img class="d-none d-lg-inline" style="width: 30px; border-radius: 100%"
+                                    src="{{ asset('assets/profile_default.jpg') }}" alt="">
+                                <span class="d-lg-none">Akun</span>
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                <li><a class="dropdown-item" href="">Lihat Profil</a></li>
+                                <li><a class="dropdown-item text-danger" href="{{ route('logout') }}">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
                 </div>
-            </nav>
+            </div>
+        </nav>
     @endif
 
     @yield('dynamic-contents')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
+        integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous">
+    </script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
-    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/plugin/relativeTime.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/locale/id.js"></script>
     @stack('script')
 </body>
 

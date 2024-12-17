@@ -97,53 +97,89 @@
                                 </div>
 
                                 <!-- Tab Status -->
-                                @foreach ($responses->where('report_id', $report->id) as $response)
-                                    @foreach ($response->response_progress as $response_progress)
+                                @forelse ($responses->where('report_id', $report->id) as $response)
+                                    @if ($responses->where('report_id', $report->id)->isEmpty())
                                         <div class="tab-pane fade" id="status-{{ $report->id }}" role="tabpanel"
                                             aria-labelledby="status-tab-{{ $report->id }}">
                                             <ul class="list-unstyled">
                                                 <li class="d-flex flex-column">
                                                     <div class="fw-bold d-flex" style="gap: 10px">
-                                                        <p>
-                                                            @if ($response->response_status === 'DONE')
-                                                                Pengaduan anda telah selesai!
-                                                            @elseif ($response->response_status === 'REJECT')
-                                                                Pengaduan Anda ditolak!
-                                                            @elseif ($response->response_status === 'ON_PROCESS')
-                                                                Pengaduan sedang diproses, dengan status
-                                                            @endif
-                                                        </p>
-                                                        <p
-                                                            class="btn
-                                                            @if ($response->response_status === 'DONE') btn-success 
-                                                            @elseif ($response->response_status === 'REJECT') btn-danger 
-                                                            @elseif ($response->response_status === 'ON_PROCESS') btn-warning @endif">
-                                                            {{ $response->response_status }}
-                                                        </p>
-                                                    </div>
-                                                    <div>
-                                                        <ul>
-                                                            @foreach ($response->response_progress as $response_progress)
-                                                                <li>{{ json_decode($response_progress->histories)->note }}
-                                                                </li>
-                                                            @endforeach
-                                                        </ul>
+                                                        <p>Belum di respon</p>
                                                     </div>
                                                 </li>
-
-                                                @if ($response->response_status !== 'DONE' && $response->response_status !== 'ON_PROCESS')
-                                                    <li class="mt-4">
-                                                        <button class="btn btn-danger btn-sm fw-semibold"
-                                                            onclick="deleteReport('{{ $report->id }}', '{{ $report->description }}')">
-                                                            <i class="fa fa-trash me-1"></i>
-                                                        </button>
-                                                    </li>
-                                                @endif
+                                                <li class="mt-4">
+                                                    <button class="btn btn-danger btn-sm fw-semibold"
+                                                        onclick="deleteReport('{{ $report->id }}', '{{ $report->description }}')">
+                                                        <i class="fa fa-trash me-1"></i>
+                                                        Hapus Pengaduan
+                                                    </button>
+                                                </li>
                                             </ul>
                                         </div>
-                                    @endforeach
-                                @endforeach
-
+                                    @else
+                                        @foreach ($response->response_progress as $response_progress)
+                                            <div class="tab-pane fade" id="status-{{ $report->id }}" role="tabpanel"
+                                                aria-labelledby="status-tab-{{ $report->id }}">
+                                                <ul class="list-unstyled">
+                                                    <li class="d-flex flex-column">
+                                                        <div class="fw-bold d-flex" style="gap: 10px">
+                                                            <p>
+                                                                @if ($response->response_status === 'DONE')
+                                                                    Pengaduan anda telah selesai!
+                                                                @elseif ($response->response_status === 'ON_PROCESS')
+                                                                    Pengaduan Anda ditolak!
+                                                                @elseif ($response->response_status === 'REJECT')
+                                                                    Pengaduan sedang diproses, dengan status
+                                                                @endif
+                                                            </p>
+                                                            <p
+                                                                class="btn
+                                                                @if ($response->response_status === 'DONE') btn-success 
+                                                                @elseif ($response->response_status === 'ON_PROCESS') btn-danger 
+                                                                @elseif ($response->response_status === 'REJECT') btn-warning @endif">
+                                                                {{ $response->response_status }}
+                                                            </p>
+                                                        </div>
+                                                        <div>
+                                                            <ul>
+                                                                @foreach ($response->response_progress as $response_progress)
+                                                                    <li>{{ json_decode($response_progress->histories)->note }}
+                                                                    </li>
+                                                                @endforeach
+                                                            </ul>
+                                                        </div>
+                                                    </li>
+                                                    @if ($response->response_status !== 'DONE' && $response->response_status !== 'ON_PROCESS' && $response->response_status !== 'ON_PROCESS')
+                                                        <li class="mt-4">
+                                                            <button class="btn btn-danger btn-sm fw-semibold"
+                                                                onclick="deleteReport('{{ $report->id }}', '{{ $report->description }}')">
+                                                                <i class="fa fa-trash me-1"></i>
+                                                            </button>
+                                                        </li>
+                                                    @endif
+                                                </ul>
+                                            </div>
+                                        @endforeach
+                                    @endif
+                                @empty
+                                    <div class="tab-pane fade" id="status-{{ $report->id }}" role="tabpanel"
+                                        aria-labelledby="status-tab-{{ $report->id }}">
+                                        <ul class="list-unstyled">
+                                            <li class="d-flex flex-column">
+                                                <div class="fw-bold d-flex" style="gap: 10px">
+                                                    <p>Belum di respon, apakah ingin menghapus data?</p>
+                                                </div>
+                                            </li>
+                                            <li class="mt-4">
+                                                <button class="btn btn-danger btn-sm fw-semibold"
+                                                    onclick="deleteReport('{{ $report->id }}', '{{ $report->description }}')">
+                                                    <i class="fa fa-trash me-1"></i>
+                                                    Hapus Pengaduan
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                @endforelse
                             </div>
                         </div>
                     </div>

@@ -21,78 +21,91 @@
     </div>
 </div>
 @endif
-<div class="container w-75">
-    <h3 class="text-center mt-5">Buat Artikel</h3>
-    <form action="{{ route('guest.store') }}" method="POST" class="form mt-3 p-4 shadow-lg" style="background-color: #F4F6FF; border-radius: 25px;" enctype="multipart/form-data">
+<div class="container w-75 my-5">
+    <div class="text-center mb-4">
+        <h3 class="fw-bold text-uppercase" style="color: #4e73df;">Buat Pengaduan</h3>
+    </div>
+
+    <form action="{{ route('guest.store') }}" method="POST" class="form p-4 shadow rounded-3" style="background-color: #f8f9fc;" enctype="multipart/form-data">
         @csrf
         <div class="row mb-3">
             <div class="col-md-12">
-                <label class="form-label" for="description">Deskripsi</label>
+                <label class="form-label fw-bold" for="description">Deskripsi</label>
                 @error('description')
-                <small class="text-danger">{{ $message }}</small>
+                    <small class="text-danger">{{ $message }}</small>
                 @enderror
-                <textarea class="form-control" name="description" id="description" cols="20" rows="5"></textarea>
+                <textarea class="form-control" name="description" id="description" rows="5" placeholder="Tulis deskripsi di sini..."></textarea>
             </div>
         </div>
+
         <div class="row mb-3">
+            {{-- Unggah Foto --}}
             <div class="col-md-6">
-                <label class="form-label" for="image">Unggah Foto</label>
+                <label class="form-label fw-bold" for="image">Unggah Foto</label>
+                <div class="input-group">
+                    <span class="input-group-text bg-warning text-white"><i class="bi bi-upload"></i></span>
+                    <input class="form-control" type="file" name="image" id="image">
+                </div>
                 @error('image')
                     <small class="text-danger">{{ $message }}</small>
                 @enderror
-                <input class="form-control" type="file" name="image" id="image">
             </div>
+
+            {{-- Jenis Artikel --}}
             <div class="col-md-6">
-                <label class="form-label" for="type">Jenis Artikel</label>
-                @error('type')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
+                <label class="form-label fw-bold" for="type">Jenis Artikel</label>
                 <select class="form-select" name="type" id="type">
-                    <option value="" selected disabled hidden>Pilih Jenis</option>
+                    <option value="" disabled selected>Pilih Jenis</option>
                     <option value="KEJAHATAN">Kejahatan</option>
                     <option value="PEMBANGUNAN">Pembangunan</option>
                     <option value="SOSIAL">Sosial</option>
                 </select>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label" for="province">Provinsi</label>
-                @error('province')
+                @error('type')
                     <small class="text-danger">{{ $message }}</small>
                 @enderror
+            </div>
+        </div>
+
+        {{-- Wilayah Dropdowns --}}
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold" for="province">Provinsi</label>
                 <select class="form-select" name="province" id="province">
-                    <option value="" disabled selected hidden>Pilih Provinsi</option>
+                    <option value="" disabled selected>Pilih Provinsi</option>
                 </select>
             </div>
             <div class="col-md-6">
-                <label class="form-label" for="regency">Kota/Kabupaten</label>
-                @error('regency')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
+                <label class="form-label fw-bold" for="regency">Kota/Kabupaten</label>
                 <select class="form-select" name="regency" id="regency" disabled>
-                    <option value="" disabled selected hidden>Pilih Kabupaten</option>
-                </select>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label" for="subdistrict">Kecamatan</label>
-                @error('subdistrict')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-                <select class="form-select" name="subdistrict" id="subdistrict" disabled>
-                    <option value="" disabled selected hidden>Pilih Kecamatan</option>
-                </select>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label" for="village">Desa</label>
-                @error('village')
-                    <small class="text-danger">{{ $message }}</small>
-                @enderror
-                <select class="form-select" name="village" id="village" disabled>
-                    <option value="" disabled selected hidden>Pilih Desa</option>
+                    <option value="" disabled selected>Pilih Kabupaten</option>
                 </select>
             </div>
         </div>
-        <div class="d-block text-center">
-            <button type="submit" class="btn btn-warning mt-4">Kirim</button>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label fw-bold" for="subdistrict">Kecamatan</label>
+                <select class="form-select" name="subdistrict" id="subdistrict" disabled>
+                    <option value="" disabled selected>Pilih Kecamatan</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label fw-bold" for="village">Desa</label>
+                <select class="form-select" name="village" id="village" disabled>
+                    <option value="" disabled selected>Pilih Desa</option>
+                </select>
+            </div>
+        </div>
+
+        {{-- Checkbox --}}
+        <div class="mb-3">
+            <input type="checkbox" class="form-check-input" name="statement" id="statement">
+            <label class="form-check-label" for="statement">Laporan yang disampaikan sesuai dengan kebenaran.</label>
+        </div>
+
+        {{-- Submit Button --}}
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary shadow-sm px-4 py-2">Kirim</button>
         </div>
     </form>
 </div>
@@ -120,7 +133,6 @@
         }
     });
 
-    // Enable regency when province is selected
     $('#province').on('change', function() {
         let provinceId = $(this).val();
         let provinceName = $('#province option:selected').data('name');
@@ -144,7 +156,6 @@
         }
     });
 
-    // Enable subdistrict when regency is selected
     $('#regency').on('change', function() {
         let regencyId = $(this).val();
         let regencyName = $('#regency option:selected').data('name');
@@ -168,7 +179,6 @@
         }
     });
 
-    // Enable village when subdistrict is selected
     $('#subdistrict').on('change', function() {
         let subdistrictId = $(this).val();
         let subdistrictName = $('#subdistrict option:selected').data('name');
@@ -191,9 +201,8 @@
         }
     });
 
-    // When form is submitted, collect ID and Name of selected items
     $('form').on('submit', function(e) {
-        e.preventDefault();  // Prevent form from submitting immediately
+        e.preventDefault();
 
         let province = JSON.stringify({
             id: $('#province').val(),
@@ -212,7 +221,6 @@
             name: $('#village option:selected').data('name')
         });
 
-        // Add the values to hidden inputs in the form (you can create hidden inputs for these fields)
         $('<input>').attr({
             type: 'hidden',
             name: 'province',
@@ -234,7 +242,6 @@
             value: village
         }).appendTo('form');
 
-        // Submit the form
         this.submit();
     });
 });

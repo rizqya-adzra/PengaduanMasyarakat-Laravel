@@ -7,7 +7,6 @@ use App\Models\StaffProvince;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
 class HeadStaffController extends Controller
@@ -44,12 +43,8 @@ class HeadStaffController extends Controller
         if (!$province) {
             return redirect()->route('login')->with('failed', 'Provinsi tidak ditemukan untuk akun Anda.');
         }
-    
-        $users = User::where('role', 'STAFF')
-                     ->whereHas('staffProvince', function ($query) use ($province) {
-                         $query->where('province', $province);
-                     })
-                     ->get();
+
+        $users = User::where('role', 'STAFF')->whereHas('staffProvince', function ($query) use ($province) {$query->where('province', $province);})->get();
 
         return view('head_staff.createUser', compact('users', 'province'));
     }

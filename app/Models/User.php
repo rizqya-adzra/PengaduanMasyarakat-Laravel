@@ -44,9 +44,18 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    public function StaffProvince()
+    public function staffprovince()
     {
         // Relasi one to one
         return $this->hasOne(StaffProvince::class, 'user_id', 'id');
+    }
+
+    public function report()
+    {
+        return $this->hasMany(Report::class, 'user_id', 'id');
+    }
+
+    public function response(){
+        return $this->hasMany(Response::class);
     }
 }
