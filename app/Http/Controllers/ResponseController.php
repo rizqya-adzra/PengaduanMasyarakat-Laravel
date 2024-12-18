@@ -19,12 +19,13 @@ class ResponseController extends Controller
         $sortOrder = $request->get('sort', 'desc');
         $startDate = $request->get('start_date'); 
         $endDate = $request->get('end_date');
+        $province = Auth::user()->StaffProvince->province ?? null;
         $reports = Report::with('user')->orderBy('voting', $sortOrder)->get();
         if ($startDate && $endDate) {
             $reports->whereBetween('created_at', [$startDate, $endDate]);
         }
         $responses = Response::all();
-        return view('staff.index', compact('reports', 'responses', 'sortOrder', 'sortOrder', 'startDate', 'endDate'));
+        return view('staff.index', compact('reports', 'responses', 'sortOrder', 'sortOrder', 'startDate', 'endDate', 'province'));
     }
 
     /**

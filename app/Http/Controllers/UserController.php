@@ -105,7 +105,7 @@ class UserController extends Controller
     public function loginAuth(Request $request)
     {
         $request->validate([
-            'name' => 'required_if:isCreatingAccount,true',
+            // 'name' => 'required_if:isCreatingAccount,true',
             'email' => 'required|email',
             'password' => 'required',
         ]);

@@ -23,7 +23,7 @@
 @endif
 <div class="container w-75 my-5">
     <div class="text-center mb-4">
-        <h3 class="fw-bold text-uppercase" style="color: #4e73df;">Buat Pengaduan</h3>
+        <h3 class="fw-bold text-uppercase" style="color: #8c52ff;">Buat Pengaduan</h3>
     </div>
 
     <form action="{{ route('guest.store') }}" method="POST" class="form p-4 shadow rounded-3" style="background-color: #f8f9fc;" enctype="multipart/form-data">
@@ -39,11 +39,10 @@
         </div>
 
         <div class="row mb-3">
-            {{-- Unggah Foto --}}
             <div class="col-md-6">
                 <label class="form-label fw-bold" for="image">Unggah Foto</label>
                 <div class="input-group">
-                    <span class="input-group-text bg-warning text-white"><i class="bi bi-upload"></i></span>
+                    <span class="input-group-text text-white" style="background-color: #8c52ff"><i class="bi bi-upload"></i></span>
                     <input class="form-control" type="file" name="image" id="image">
                 </div>
                 @error('image')
@@ -51,7 +50,6 @@
                 @enderror
             </div>
 
-            {{-- Jenis Artikel --}}
             <div class="col-md-6">
                 <label class="form-label fw-bold" for="type">Jenis Artikel</label>
                 <select class="form-select" name="type" id="type">
@@ -66,7 +64,6 @@
             </div>
         </div>
 
-        {{-- Wilayah Dropdowns --}}
         <div class="row mb-3">
             <div class="col-md-6">
                 <label class="form-label fw-bold" for="province">Provinsi</label>
@@ -97,15 +94,13 @@
             </div>
         </div>
 
-        {{-- Checkbox --}}
         <div class="mb-3">
             <input type="checkbox" class="form-check-input" name="statement" id="statement">
-            <label class="form-check-label" for="statement">Laporan yang disampaikan sesuai dengan kebenaran.</label>
+            <label class="form-check-label" for="statement" >Laporan yang disampaikan sesuai dengan kebenaran.</label>
         </div>
 
-        {{-- Submit Button --}}
         <div class="text-center">
-            <button type="submit" class="btn btn-primary shadow-sm px-4 py-2">Kirim</button>
+            <button type="submit" class="btn shadow-sm px-4 py-2" style="background-color: #8c52ff; color: white">Kirim</button>
         </div>
     </form>
 </div>

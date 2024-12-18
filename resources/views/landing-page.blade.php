@@ -24,15 +24,15 @@
         @endif
         <div class="row h-100">
             <div class="col-lg-7 p-5 d-flex flex-column justify-content-center">
-                <div class="p-5" style="border-left: 6px solid #FBD46D;">
-                    <h1 class="mb-3" style="color: #495E57">PENGADUAN MASYARAKAT</h1>
+                <div class="p-5" style="border-left: 6px solid #8c52ff; ">
+                    <h1 class="mb-3 gradient-text">PENGADUAN MASYARAKAT</h1>
                     <p class="mb-4">
                         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus, eligendi eveniet quod optio ipsam
                         ad doloremque. Soluta perspiciatis velit numquam cum alias nihil laboriosam quos ad, corporis minus adipisci
                         distinctio possimus est at accusamus id quo magnam, atque debitis enim aliquam dicta optio. Consequatur
                         dolore quasi omnis quibusdam.
                     </p>
-                    <a class="btn" style="background-color: #FBD46D" href="{{ route('login') }}">Bergabung!</a>
+                    <a class="btn" style="background-color: #8c52ff; color: white" href="{{ route('login') }}">Bergabung!</a>
                 </div>
             </div>
             <div class="col-lg-5 position-relative" style="background-color: #495E57;">
@@ -50,9 +50,9 @@
     </div>
     
     <div class="position-fixed top-50 end-0 p-5 d-flex flex-column" style="transform: translateY(-50%);">
-        <a class="btn btn-lg mb-3" style="background-color: #FBD46D" href="{{ route('login') }}"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
-        <button class="btn btn-lg mb-3" style="background-color: #FBD46D" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-info" aria-hidden="true"></i></button>
-        <a class="btn btn-lg mb-3" style="background-color: #FBD46D" href="{{ route('guest.index') }}"><i class="fa fa-pencil" aria-hidden="true" ></i></a>
+        <a class="btn btn-lg mb-3" style="background-color: #8c52ff; color: white" href="{{ route('login') }}"><i class="fa fa-user-circle" aria-hidden="true"></i></a>
+        <button class="btn btn-lg mb-3" style="background-color: #00bf63; color: white" data-bs-toggle="modal" data-bs-target="#exampleModal"><i class="fa fa-info" aria-hidden="true"></i></button>
+        <a class="btn btn-lg mb-3" style="background-color: #8c52ff; color: white" href="{{ route('guest.index') }}"><i class="fa fa-pencil" aria-hidden="true" ></i></a>
     </div>    
 
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">

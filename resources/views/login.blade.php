@@ -17,23 +17,23 @@
             <form class="form p-4" action="{{ route('login.auth') }}" method="POST">
                 @csrf
                 <div class="mb-4 text-center">
-                    <h1 class="fw-bold" style="color: #495E57; font-size: 1.8rem;">LOGIN</h1>
+                    <h1 class="fw-bold" style="color: #00bf63; font-size: 1.8rem;">LOGIN</h1>
                 </div>
-                <div class="mb-3">
-                    <label for="name" class="form-label fw-semibold" style="color: #495E57;">Username</label>
+                {{-- <div class="mb-3">
+                    <label for="name" class="form-label fw-semibold" style="color: #00bf63;">Username</label>
                     <input type="name" name="name" class="form-control form-control" id="name" placeholder="Masukan username">
-                </div>
+                </div> --}}
                 <div class="mb-3">
-                    <label for="email" class="form-label fw-semibold" style="color: #495E57;">Alamat Email</label>
+                    <label for="email" class="form-label fw-semibold" style="color: #00bf63;">Alamat Email</label>
                     <input type="text" name="email" class="form-control form-control" id="email" placeholder="Masukan email">
                 </div>
-                <div class="mb-3">
-                    <label for="password" class="form-label fw-semibold" style="color: #495E57;">Password</label>
+                <div class="mb-5">
+                    <label for="password" class="form-label fw-semibold" style="color: #00bf63;">Password</label>
                     <input type="password" name="password" class="form-control form-control" id="password" placeholder="Masukan password">
                 </div>
                 <div class="text-center">
-                    <button type="submit" name="isCreatingAccount" value="true" class="btn btn w-100 mb-2" style="background-color: #495E57 ; color: #FBD46D; font-weight: bold;">Buat Akun</button>
-                    <button type="submit" name="isCreatingAccount" value="false" class="btn btn w-100" style="background-color: #FBD46D; color: #495E57; font-weight: bold;">Login</button>
+                    <button type="submit" name="isCreatingAccount" value="true" class="btn btn w-100 mb-2" style="background-color: #00bf63 ; color: white; font-weight: bold;">Buat Akun</button>
+                    <button type="submit" name="isCreatingAccount" value="false" class="btn btn w-100" style="background-color: #8c52ff; color: white; font-weight: bold;">Login</button>
                 </div>                
             </form>
         </div>
@@ -46,7 +46,7 @@
                 width: 100%;
                 height: 100%;
                 background: url('{{ asset('assets/login_img.jpg') }}') center/cover no-repeat;\z-index: 1;
-                opacity: 0.2;">
+                opacity: 0.1;">
             </div>
             <div class="d-flex flex-column justify-content-center align-items-center text-center" style="z-index: 2; position: relative;">
                 <h2 class="fw-bold mb-3" style=" font-size: 2rem; color: white;">WELCOME!</h2>

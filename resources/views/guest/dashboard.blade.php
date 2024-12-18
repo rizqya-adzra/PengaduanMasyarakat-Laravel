@@ -26,16 +26,16 @@
         </div>
     @endif
     <div class="container mt-5">
-        <h3 class="text-center">Monitor Pengaduan</h3>
-        <div class="accordion" id="reportAccordion">
+        <h2 class="text-center mb-4" style="color: #8c52ff; font-weight: bold;">Monitoring Pengaduan</h2>
+        <div class="accordion shadow-sm" id="reportAccordion">
             @foreach ($reports as $report)
                 <div class="accordion-item"
-                    style="background-color: {{ $loop->odd ? '#495E57' : '#fff' }}; color: {{ $loop->odd ? '#fff' : '#000' }}">
+                    style="background-color: {{ $loop->odd ? '#00bf63' : '#fff' }}; color: {{ $loop->odd ? '#fff' : '#000' }}">
                     <h2 class="accordion-header" id="heading-{{ $report->id }}">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapse-{{ $report->id }}" aria-expanded="false"
                             aria-controls="collapse-{{ $report->id }}"
-                            style="background-color: {{ $loop->odd ? '#495E57' : '#fff' }}; color: {{ $loop->odd ? '#fff' : '#00' }}">
+                            style="background-color: {{ $loop->odd ? '#00bf63' : '#fff' }}; color: {{ $loop->odd ? '#fff' : '#00' }}">
                             Pengaduan pada {{ $report->created_at->format('d M Y H:i') }}
                         </button>
                     </h2>

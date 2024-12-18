@@ -84,7 +84,7 @@
                                     <li>
                                         <b>{{ $comment->user->email }}</b>
                                         <p>{{ $comment->comment }}</p>
-                                        <p><small>Dibuat pada: {{ \Carbon\Carbon::parse($comment->created_at)->translatedFormat('d F Y H ') }}
+                                        <p><small>Dibuat pada: {{ \Carbon\Carbon::parse($comment->created_at)->translatedFormat('d F Y ') }}
                                         </small></p>
                                     </li>
                                 @endforeach
@@ -99,7 +99,7 @@
                         @csrf
                         <label class="form-label">Tambahkan Komentar:</label>
                         <textarea class="form-control" name="comment" id="comment" cols="20" rows="5"></textarea>
-                        <button type="submit" class="btn btn-success mt-3">Kirim</button>
+                        <button type="submit" class="btn mt-3" style="background-color: #8c52ff; color: white">Kirim</button>
                     </form>
                 </div>
             </div>

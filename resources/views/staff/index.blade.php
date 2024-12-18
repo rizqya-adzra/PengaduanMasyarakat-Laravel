@@ -25,11 +25,14 @@
             </div>
         </div>
     @endif
-    <div class="container bg-white mt-5 p-5">
-        <div class="d-flex justify-content-end">
+    <div class="container bg-white mt-5 p-5 shadow-sm ">
+        <div class="d-flex justify-content-between mb-3">
+            <div>
+                <h4>Data Pengaduan Daerah <span style="color: #8c52ff">{{$province}}</span> </h4>
+            </div>
             <form action="{{ route('staff.download') }}" method="GET">
                 <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn mb-4 btn-success dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
                         Export (.xlsx)
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
@@ -73,7 +76,7 @@
         </div>
         <div>
             <table class="table p-5">
-                <thead class="">
+                <thead class="table-info">
                     <tr>
                         <th>Gambar dan Pengirim</th>
                         <th>Lokasi dan Tanggal</th>

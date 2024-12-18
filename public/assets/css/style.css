@@ -1,0 +1,7 @@
+.gradient-text {
+    font-weight: bold;
+    background-image: linear-gradient(to right, #00bf63, #8c52ff);
+    -webkit-background-clip: text; /* Membuat gradient hanya pada teks */
+    -webkit-text-fill-color: transparent; /* Menjadikan teks transparan */
+    color: transparent; /* Untuk kompatibilitas */
+}

@@ -59,8 +59,9 @@
             <div class="col-lg-6">
                 <div>
                     @foreach ($response_progresses as $response_progress)
-                        <ul>
+                        <ul class="d-flex justify-content-between" >
                             <li> {{ json_decode($response_progress->histories)->note }} </li>
+                            <p style="color: #00bf63">{{ $response_progress->created_at->diffForHumans() }} </p>
                         </ul>
                     @endforeach
                 </div>

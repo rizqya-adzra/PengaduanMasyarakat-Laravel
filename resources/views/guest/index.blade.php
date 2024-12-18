@@ -29,14 +29,11 @@
         <div class="d-flex justify-content-center">
             <div class="col-lg-8 col-md-12 p-5">
                 <div class="text-center mb-5">
-                    <h2 class="mb-4" style="color: #495E57; font-weight: bold;">Cari Berdasarkan Provinsi</h2>
+                    <h2 class="mb-4" style="color: #8c52ff; font-weight: bold;">Cari Berdasarkan Provinsi</h2>
                     <form class="d-flex justify-content-center align-items-center" role="search">
-                        <select class="form-select me-2 shadow-sm" name="search" id="search"
-                            style="border-radius: 15px; max-width: 300px;">
+                        <select class="form-select me-2 shadow-sm" name="search" id="search">
                             <option value="" disabled selected hidden>Pilih Provinsi</option>
                         </select>
-                        <button class="btn shadow-sm" style="background-color: #495E57; color: white; border-radius: 15px;"
-                            type="submit">Cari</button>
                     </form>
                 </div>
 
@@ -47,10 +44,10 @@
             <div class="col-lg-4 col-md-6 col-sm-10 mt-5 my-5" style="">
                 <div class="card shadow-sm align-items-center position-sticky justify-content-center"
                     style="border-radius: 15px; top: 120px;">
-                    <div class="card-header text-center bg-light">
-                        <div class="d-flex align-items-center justify-content-center p-2">
-                            <i class="fa fa-info-circle fa-2x" aria-hidden="true"></i>
-                            <h4 class="mb-0">Informasi Pembuatan Pengaduan</h4>
+                    <div class="card-header text-center bg-light p-4">
+                        <div class="d-flex align-items-center justify-content-center ">
+                            <i class="fa fa-info-circle fa-2x" aria-hidden="true" style="color: #00bf63;"></i>
+                            <h4 class="mb-0" style="color: #00bf63;">Informasi Pembuatan Pengaduan</h4>
                         </div>
                     </div>
                     <div class="card-body p-4">
@@ -62,8 +59,8 @@
                         </ul>
                     </div>
                     <div class="p-5 d-flex flex-column">
-                        <p>Buat pengaduan Anda:</p>
-                        <a class="btn btn-lg mb-3" href="{{ route('guest.create') }}" style="background-color: #FBD46D"><i
+                        <p>Buat pengaduan Anda disini:</p>
+                        <a class="btn btn-lg mb-3" href="{{ route('guest.create') }}" style="background-color: #00bf63; color:white"><i
                                 class="fa fa-pencil" aria-hidden="true"></i></a>
                     </div>
                 </div>
@@ -125,7 +122,7 @@
 
                             const formattedDate = dayjs(createdAt).fromNow();
                             $('#reports-list').append(`
-                        <div class="mt-5 p-4 shadow-sm" style="border-radius: 25px; background-color:#fff">
+                        <div class="mt-5 p-4 shadow-md" style="border-radius: 10px; background-color:#ffff">
                             <div class="d-flex align-items-center">
                                 <img src="{{ asset('storage') }}/${report.image}" class="img-fluid rounded shadow-sm"
                                     alt="Gambar Artikel" style="width: 50%; max-width: 200px;">

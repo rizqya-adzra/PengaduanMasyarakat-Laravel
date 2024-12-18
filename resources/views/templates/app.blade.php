@@ -29,7 +29,7 @@
         <nav class="navbar navbar-expand-lg sticky-top bg-body-tertiary shadow-sm">
             <div class="container-fluid d-flex justify-content-between align-items-center">
                 <a class="navbar-brand" href="#">
-                    <h4>Pengaduan Masyarakat</h4>
+                    <h4 class="gradient-text">Pengaduan Masyarakat</h4>
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                     aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
