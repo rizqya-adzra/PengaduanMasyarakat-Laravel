@@ -148,7 +148,7 @@ class ReportController extends Controller
     {
         try {
             $report = Report::findOrFail($id);
-            $report->increment('viewers'); // Tambah jumlah views
+            $report->increment('viewers'); 
             return response()->json([
                 'success' => true,
                 'views' => $report->viewers,
@@ -185,12 +185,10 @@ class ReportController extends Controller
 
         $file_name = 'data_pengaduan' . '.xlsx';
 
-        // Mengecek apakah filter tanggal diterapkan
         if ($dateFilter === 'custom' && $startDate && $endDate) {
             return Excel::download(new ReportExport($startDate, $endDate), $file_name);
         }
 
-        // Jika tidak ada filter tanggal, ekspor seluruh data
         return Excel::download(new ReportExport(), $file_name);
     }
 }

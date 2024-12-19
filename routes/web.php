@@ -36,9 +36,6 @@ Route::middleware(['isGuest'])->group(function () {
 
     Route::post('/login', [UserController::class, 'loginAuth'])->name('login.auth');
 
-    Route::get('/register', function () {
-        return view('register');
-    })->name('register');
 });
 
 Route::middleware(['isLogin'])->group(function () {
@@ -54,7 +51,6 @@ Route::middleware(['isLogin'])->group(function () {
             Route::get('/dashboard', [ReportController::class, 'dashboard'])->name('dashboard');
             Route::delete('/delete/{id}', [ReportController::class, 'destroy'])->name('delete');
             Route::post('/views/{id}', [ReportController::class, 'views'])->name('views');
-            // Route::get('/showDashboard/{id}', [ReportController::class, 'showDashboard'])->name('showDashboard');
             Route::prefix('/comments')->name('comments.')->group(function () {
                 Route::post('/store/{id}', [CommentController::class, 'store'])->name('store');
                 Route::delete('/delete/{id}', [CommentController::class, 'destroy'])->name('delete');

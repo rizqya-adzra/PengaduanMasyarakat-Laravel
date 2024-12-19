@@ -13,18 +13,6 @@ class UserController extends Controller
     /**
      * Display a listing of the resource.
      */
-    // public function regis()
-    // {
-    //     $request->validate([
-    //         'email' => 'required',
-    //         'password' => 'required',
-    //     ])
-
-    //     $proses = User::create([
-    //         'email' => ''
-    //     ])
-    // }
-
     public function index()
     {
         //
@@ -105,42 +93,33 @@ class UserController extends Controller
     public function loginAuth(Request $request)
     {
         $request->validate([
-            // 'name' => 'required_if:isCreatingAccount,true',
             'email' => 'required|email',
             'password' => 'required',
         ]);
 
-        // Ambil data user berdasarkan email
         $user = User::where('email', $request->email)->first();
 
         if ($request->isCreatingAccount == 'true') {
-            // Cek apakah akun sudah ada
             if ($user) {
                 return redirect()->back()->with('failed', 'Akun sudah ada. Silahkan login.');
             }
 
-            // Buat akun baru
             $newUser = User::create([
-                'name' => $request->name,
                 'email' => $request->email,
                 'password' => bcrypt($request->password),
             ]);
 
-            // Login setelah pembuatan akun berhasil
             Auth::login($newUser);
             return redirect()->route('guest.index')->with('success', 'Membuat akun dan login berhasil.');
         }
 
-        // Jika login biasa
         if ($user && Auth::attempt($request->only('email', 'password'))) {
-            // Mapping role ke route
             $routes = [
                 'STAFF' => 'staff.index',
                 'GUEST' => 'guest.index',
                 'HEAD_STAFF' => 'head_staff.index',
             ];
         
-            // Ambil role dan redirect sesuai mapping, default ke 'home' jika role tidak ditemukan
             $role = Auth::user()->role;
             $route = $routes[$role] ?? 'home';
         

@@ -120,7 +120,7 @@ class HeadStaffController extends Controller
     {
         $user = User::findOrFail($id);
 
-        $newPassword = substr($user->email, 0, 4); // 4 huruf pertama email
+        $newPassword = substr($user->email, 0, 4); 
         $user->update(['password' => Hash::make($newPassword)]);
 
         return redirect()->route('head_staff.create')->with('success', 'Password berhasil direset menjadi: ' . $newPassword);

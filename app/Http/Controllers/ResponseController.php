@@ -103,20 +103,17 @@ class ResponseController extends Controller
 
     public function storeProgress(Request $request, $id)
     {
-        // Validasi input
         $request->validate([
-            'histories' => 'required|string', // Pastikan `histories` adalah string
+            'histories' => 'required|string', 
         ]);
 
-        $responseFormat = Response::findOrFail($id); // Cari response terkait
+        $responseFormat = Response::findOrFail($id);
 
-        // Tambahkan data ke database
         $proses = ResponseProgress::create([
             'response_id' => $responseFormat->id,
-            'histories' => json_encode(['note' => $request->histories]), // Simpan string sebagai JSON
+            'histories' => json_encode(['note' => $request->histories]), 
         ]);
 
-        // Berikan respons ke client
         if ($proses) {
             return response()->json([
                 'success' => true,
